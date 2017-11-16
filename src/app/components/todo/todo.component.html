@@ -1,0 +1,19 @@
+<div>
+
+	<input type="checkbox"
+		   id="{{ 'todoToggler-' + todoData['id'] }}"
+		   name="{{ 'todoToggler-' + todoData['id'] }}"
+		   (change)="changeTodoStatus()"
+		   [(ngModel)]="isCompleted"
+		   title="Complete task"
+	>
+
+	<span>
+		{{ todoData['text'] }}
+	</span>
+
+	<button (click)="removeTodo()">
+		Remove
+	</button>
+
+</div>

@@ -1,0 +1,40 @@
+<h2>
+	Board works!
+</h2>
+
+<a routerLink="/app/boards-list">Back to boards list</a>
+
+<article *ngIf="board">
+	<p *ngIf="board.tasks.length">
+		Tasks completed: {{ completedTasksAmount }} of {{ board.tasks.length }}
+	</p>
+
+	<p *ngIf="!board.tasks.length">
+		No tasks in the board.
+	</p>
+
+	<ul>
+		<li *ngFor="let task of board.tasks">
+			<app-todo [todoData]="task"
+					  (onCheck)="changeStatus($event)"
+					  (onRemove)="removeTask($event)">
+			</app-todo>
+		</li>
+	</ul>
+
+	<form (submit)="createNewTodo()" #addTaskForm="ngForm">
+		<input type="text"
+			   id="taskTextInput"
+			   placeholder="Add new task..."
+			   name="taskTextInput"
+			   required
+			   [(ngModel)]="newTaskText"
+		>
+		<button type="submit" (click)="createNewTodo()">
+			Add new task
+		</button>
+	</form>
+</article>
+
+
+

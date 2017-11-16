@@ -1,0 +1,21 @@
+[{
+	"id": 1,
+	"board_name": "test board",
+	"tasks": [{
+		"id": 1,
+		"task_text": "load json",
+		"is_completed": false
+	}]
+}, {
+	"id": 2,
+	"board_name": "another test board",
+	"tasks": [{
+		"id": 2,
+		"task_text": "check second board",
+		"is_completed": true
+	}, {
+		"id": 3,
+		"task_text": "test it",
+		"is_completed": false
+	}]
+}]
