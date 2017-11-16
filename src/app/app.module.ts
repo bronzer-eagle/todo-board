@@ -4,6 +4,10 @@ import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {HttpClientModule} from '@angular/common/http';
 
+// Modules
+
+import {AuthModule} from './modules/auth/auth.module';
+
 // Components
 
 import {AppComponent} from './app.component';
@@ -30,6 +34,7 @@ import {routes} from './routes/routes';
 	imports: [
 		BrowserModule,
 		FormsModule,
+		AuthModule,
 		RouterModule.forRoot(routes),
 		HttpClientModule
 	],

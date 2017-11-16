@@ -6,7 +6,7 @@ import {BoardsListComponent} from '../components/boards-list/boards-list.compone
 export const routes: Routes = [{
 	path: '',
 	pathMatch: 'full',
-	redirectTo: 'app/boards-list',
+	redirectTo: 'auth',
 }, {
 	path: 'app',
 	pathMatch: 'full',
@@ -21,4 +21,8 @@ export const routes: Routes = [{
 }, {
 	path: 'app/board/:id',
 	component: BoardComponent
+}, {
+	path: 'auth',
+	loadChildren: 'app/modules/auth/auth.module#AuthModule'
+	// TODO
 }];
