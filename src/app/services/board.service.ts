@@ -112,9 +112,14 @@ export class BoardService {
 
 	private _generateTaskId(): number {
 		const list = this.tasksList.getValue();
-		const id = list[list.length - 1].id;
 
-		return id + 1;
+		if (list && list.length) {
+			const id = list[list.length - 1].id;
+
+			return id + 1;
+		}
+
+		return 0;
 	}
 
 	private _createNewTodoTask(taskText: string): Todo {
