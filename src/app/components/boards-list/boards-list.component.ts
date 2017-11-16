@@ -25,5 +25,4 @@ export class BoardsListComponent implements OnInit {
 				this.boards = boardList;
 			});
 	}
-
 }

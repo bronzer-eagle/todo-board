@@ -23,46 +23,45 @@ export class BoardService {
 
 	// Endpoints
 
+	/**
+	 * Get all boards from JSON
+	 * @returns {Observable<any>}
+	 */
+
 	public getBoardsList(): Observable<any> {
-		return this.http.get('/assets/todo-boards.json')
-			.map((res: any) => res.map(Board.transformer));
+		const url = '/assets/todo-boards.json';
+
+		return this.http.get(url).map((res: any) => res.map(Board.transformer));
 	}
+
+	/**
+	 * Returns board data by id
+	 * @param {number} id
+	 * @returns {Observable<any>}
+	 */
 
 	public returnBoardData(id: number): Observable<any> {
 		const boardsList = this.boards.getValue();
+		const listExists = boardsList && boardsList.length;
 
-		if (boardsList && boardsList.length) {
-			return Observable.create((observer) => {
+		if (listExists) {
+			return Observable.create(observer => {
 				const board = this._getBoardDataById(id, boardsList);
 
 				observer.next(board);
 			});
 		}
 
-		return this.boards.map((boards) => this._getBoardDataById(id, boards));
-	}
-
-	private _getBoardDataById(id: number, boards: Board[]) {
-		const filtered = boards.filter(board => {
-			return board.id === id;
-		});
-		const currentBoard = filtered[0];
-
-		if (currentBoard) {
-			this.tasksList.next(currentBoard.tasks);
-		}
-
-		return currentBoard;
+		return this.boards.map(boards => this._getBoardDataById(id, boards));
 	}
 
 	// Actions
 
-	// public generateRandomTasks(amount: number = 3): void {
-	// 	for (let i = 0; i < amount; i++) {
-	// 		this.addNewTask(`Some random task #${i + 1}`);
-	// 	}
-	// }
-	//
+	public generateRandomTasks(amount: number = 3): void {
+		for (let i = 0; i < amount; i++) {
+			this.addNewTask(`Some random task #${i + 1}`);
+		}
+	}
 
 	public addNewTask(taskText: string): void {
 		const currentList = this.tasksList.getValue();
@@ -72,10 +71,10 @@ export class BoardService {
 		this.tasksList.next(currentList);
 	}
 
-	// public isEmptyTasksList(): boolean {
-	// 	return this.tasksList.getValue().length === 0;
-	// }
-	//
+	public isEmptyTasksList(): boolean {
+		return this.tasksList.getValue().length === 0;
+	}
+
 
 	public changeTaskStatus(id, isCompleted): void {
 		const currentList = this.tasksList.getValue();
@@ -111,7 +110,7 @@ export class BoardService {
 
 	// Private helpers
 
-	private generateTaskId(): number {
+	private _generateTaskId(): number {
 		const list = this.tasksList.getValue();
 		const id = list[list.length - 1].id;
 
@@ -120,11 +119,24 @@ export class BoardService {
 
 	private _createNewTodoTask(taskText: string): Todo {
 		const params = {
-			id: this.generateTaskId(),
+			id: this._generateTaskId(),
 			text: taskText,
 			isCompleted: false
 		};
 
 		return new Todo(params);
+	}
+
+	private _getBoardDataById(id: number, boards: Board[]): Board {
+		const filtered = boards.filter(board => {
+			return board.id === id;
+		});
+		const currentBoard = filtered[0];
+
+		if (currentBoard) {
+			this.tasksList.next(currentBoard.tasks);
+		}
+
+		return currentBoard;
 	}
 }
