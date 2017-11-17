@@ -4,8 +4,8 @@ import {Todo} from '../../models/todo/todo';
 @Component({
 	selector: 'app-todo',
 	templateUrl: './todo.component.html',
-	styleUrls: ['./todo.component.css'],
-	encapsulation: ViewEncapsulation.None
+	styleUrls: ['./todo.component.scss'],
+	encapsulation: ViewEncapsulation.Emulated
 })
 export class TodoComponent implements OnInit {
 	@Input() todoData: Todo;

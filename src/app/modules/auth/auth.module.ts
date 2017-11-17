@@ -5,21 +5,28 @@ import {RouterModule} from '@angular/router';
 // Components
 
 import {AuthComponent} from './auth.component';
-import {LoginComponent} from './login/login.component';
+import {LoginComponent} from './components/login/login.component';
+import { SignupComponent } from './components/signup/signup.component';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		RouterModule.forChild([{
 			path: '',
-			pathMatch: 'full',
-			redirectTo: 'auth/login'
-		}, {
-			path: 'login',
-			component: LoginComponent
+			children: [{
+				path: '',
+				pathMatch: 'full',
+				redirectTo: 'login'
+			}, {
+				path: 'login',
+				component: LoginComponent
+			}, {
+				path: 'signup',
+				component: SignupComponent
+			}]
 		}])
 	],
-	declarations: [AuthComponent, LoginComponent],
+	declarations: [AuthComponent, LoginComponent, SignupComponent],
 	bootstrap: [AuthComponent]
 })
 export class AuthModule {

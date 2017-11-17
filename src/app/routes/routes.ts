@@ -24,5 +24,4 @@ export const routes: Routes = [{
 }, {
 	path: 'auth',
 	loadChildren: 'app/modules/auth/auth.module#AuthModule'
-	// TODO
 }];
