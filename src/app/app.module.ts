@@ -22,10 +22,12 @@ import {BoardsListComponent} from './components/boards-list/boards-list.componen
 // Services
 
 import {BoardService} from './services/board.service';
+import {WebsocketService} from './services/websocket.service';
 
 // Other
 
 import {routes} from './routes/routes';
+
 
 
 @NgModule({
@@ -43,7 +45,7 @@ import {routes} from './routes/routes';
 		HttpClientModule,
 		SharedModule
 	],
-	providers: [BoardService],
+	providers: [BoardService, WebsocketService],
 	bootstrap: [AppComponent]
 })
 export class AppModule {

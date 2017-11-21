@@ -7,16 +7,18 @@ import findIndex from 'lodash/fp/findIndex';
 
 import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/do';
 
 import {Todo} from '../models/todo/todo';
 import {Board} from '../models/board/board';
+import {WebsocketService} from './websocket.service';
 
 @Injectable()
 export class BoardService {
 	tasksList: BehaviorSubject<Todo[]> = new BehaviorSubject<Todo[]>([]);
 	boards: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
 
-	constructor(private http: HttpClient) {
+	constructor(private http: HttpClient, private socket: WebsocketService) {
 		this.getBoardsList()
 			.subscribe(this.boards);
 	}
@@ -29,9 +31,14 @@ export class BoardService {
 	 */
 
 	public getBoardsList(): Observable<any> {
-		const url = '/assets/todo-boards.json';
+		const listener = this.socket.on('setTodos').map((res: any) => {
+			console.log(res);
+			return res.map(Board.transformer);
+		});
 
-		return this.http.get(url).map((res: any) => res.map(Board.transformer));
+		this.socket.emit('getTodos');
+
+		return listener;
 	}
 
 	/**

@@ -20,7 +20,7 @@ export class BoardsListComponent implements OnInit {
 	}
 
 	private _subscribeToBoardsList(): void {
-		this.boardService.getBoardsList()
+		this.boardService.boards
 			.subscribe(boardList => {
 				this.boards = boardList;
 			});

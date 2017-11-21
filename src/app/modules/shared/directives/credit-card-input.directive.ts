@@ -8,8 +8,8 @@ export class CreditCardInputDirective {
 		console.log('test constructor');
 	}
 
-	@HostListener('input') onInput() {
-		console.log('test');
+	@HostListener('input', ['$event']) onInput($event) {
+		console.log($event);
 	}
 
 }
