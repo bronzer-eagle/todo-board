@@ -3,6 +3,8 @@ export class User {
 	public lastName: string;
 	public email: string;
 	public phoneNumber: string;
+	public password: string;
+	public passwordRepeat: string;
 
 	private _birthdate: Date;
 
@@ -23,5 +25,9 @@ export class User {
 
 	constructor(data) {
 		Object.assign(this, data);
+	}
+
+	public checkPassword() {
+		return this.password === this.passwordRepeat;
 	}
 }

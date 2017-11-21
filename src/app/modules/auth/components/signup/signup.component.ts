@@ -1,4 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {User} from '../../models/user';
 
 @Component({
@@ -8,10 +9,10 @@ import {User} from '../../models/user';
 	encapsulation: ViewEncapsulation.None
 })
 export class SignupComponent implements OnInit {
-	newUser = {birthday: {}};
 	birthdayParams: object;
+	signUpForm: FormGroup;
 
-	constructor() {
+	constructor(private formBuilder: FormBuilder) {
 	}
 
 	static _setBirthdayParams(): Object {
@@ -43,12 +44,33 @@ export class SignupComponent implements OnInit {
 	ngOnInit() {
 		this.birthdayParams = SignupComponent._setBirthdayParams();
 
-		console.log(this.birthdayParams);
+		this._createForm();
 	}
 
 	public onSubmit(): void {
-		const createdUser = new User(this.newUser);
+		const createdUser = new User(this.signUpForm.value);
 
 		console.log('User created: ', createdUser);
+	}
+
+	private _createForm() {
+		this.signUpForm = this.formBuilder.group({
+			firstName: ['', Validators.required],
+			lastName: ['', Validators.required],
+			email: ['', Validators.required],
+			phoneNumber: ['', Validators.required],
+			password: ['', Validators.required],
+			passwordRepeat: ['', Validators.required],
+			birthday: this.formBuilder.group({
+				year: ['', Validators.required],
+				month: ['', Validators.required],
+				day: ['', Validators.required]
+			})
+		});
+
+		// this.signUpForm.valueChanges.subscribe(
+		// 	(value: string) => {
+		//
+		// 	});
 	}
 }

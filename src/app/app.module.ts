@@ -7,13 +7,17 @@ import {HttpClientModule} from '@angular/common/http';
 // Modules
 
 import {AuthModule} from './modules/auth/auth.module';
+import {SharedModule} from './modules/shared/shared.module';
 
 // Components
 
 import {AppComponent} from './app.component';
 import {BoardComponent} from './components/board/board.component';
 import {TodoComponent} from './components/todo/todo.component';
-import { BoardsListComponent } from './components/boards-list/boards-list.component';
+import {BoardsListComponent} from './components/boards-list/boards-list.component';
+
+// Directives
+
 
 // Services
 
@@ -29,16 +33,18 @@ import {routes} from './routes/routes';
 		AppComponent,
 		BoardComponent,
 		TodoComponent,
-		BoardsListComponent
+		BoardsListComponent,
 	],
 	imports: [
 		BrowserModule,
 		FormsModule,
 		AuthModule,
 		RouterModule.forRoot(routes),
-		HttpClientModule
+		HttpClientModule,
+		SharedModule
 	],
 	providers: [BoardService],
 	bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+}
