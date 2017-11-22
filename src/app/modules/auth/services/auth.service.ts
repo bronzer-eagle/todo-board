@@ -21,4 +21,8 @@ export class AuthService {
 		return this.socket.on('signIn');
 	}
 
+	setLogged() {
+		window.localStorage.setItem('isLogged', 'true');
+	}
+
 }

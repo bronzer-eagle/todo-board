@@ -2,6 +2,7 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {User} from '../../models/user';
 import {AuthService} from '../../services/auth.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
 	selector: 'app-signup',
@@ -14,7 +15,8 @@ export class SignupComponent implements OnInit {
 	signUpForm: FormGroup;
 
 	constructor(private formBuilder: FormBuilder,
-				private authService: AuthService) {
+				private authService: AuthService,
+				private router: Router) {
 	}
 
 	static _setBirthdayParams(): Object {
@@ -56,6 +58,7 @@ export class SignupComponent implements OnInit {
 			.subscribe(res => {
 				console.log(res);
 				console.log('User created: ', createdUser);
+				this.router.navigateByUrl('auth/login');
 			}, err => {
 				console.log(err);
 			});
