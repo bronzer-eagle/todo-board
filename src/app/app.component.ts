@@ -14,10 +14,11 @@ export class AppComponent implements OnInit {
 
 	ngOnInit() {
 		this.websoketService.connect()
-			.subscribe(result => {
-				console.log('Root component connected!');
+			.subscribe((result = {}) => {
+				console.log(`Root component connected! Status: ${result['status']}`);
 			}, err => {
-				console.log('some error occured:', err);
+				console.log('Some error occured:', err['message']);
+				console.log(err['error']);
 			});
 	}
 }

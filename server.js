@@ -13,7 +13,9 @@ socket.on('connection', function (client) {
 	client.on('signIn', signIn);
 	client.on('getTodos', sendTodos);
 
-	client.on('disconnect', onDisconnect);
+	client.on('disconnect', () => {
+		console.log('Received: disconnect event from client: ' + client.id);
+	});
 
 	// Handle a test event from the client
 
@@ -34,11 +36,6 @@ socket.on('connection', function (client) {
 			console.log(`Hello user`);
 			client.emit('signIn', "Successfully signed in");
 		}
-	}
-
-
-	function onDisconnect() {
-		console.log('Received: disconnect event from client: ' + client.id);
 	}
 
 	function sendTodos() {
@@ -80,8 +77,7 @@ socket.on('connection', function (client) {
 		readJSON(callback);
 	}
 
-	function readJSON(callback = () => {
-	}) {
+	function readJSON(callback = () => {}) {
 		jf.readFile('src/assets/todo-boards.json', function (err, data) {
 			callback(err, data);
 		});

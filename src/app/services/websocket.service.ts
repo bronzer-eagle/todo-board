@@ -18,11 +18,11 @@ export class WebsocketService {
 			this.socket = io.connect(testServer);
 
 			this.socket.on('connect', () => {
-				observer.next('connected');
+				observer.next({status: 'Connected'});
 			});
 
 			this.socket.on('connect_error', (error) => {
-				observer.error('not connected');
+				observer.error({message: 'Not connected:', error});
 			});
 
 		});

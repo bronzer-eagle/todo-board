@@ -1,12 +1,25 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {BoardService} from '../../services/board.service';
 import {Board} from '../../models/board/board';
+import {
+	trigger,
+	state,
+	style,
+	animate,
+	transition
+} from '@angular/animations';
 
 @Component({
 	selector: 'app-boards-list',
 	templateUrl: './boards-list.component.html',
 	styleUrls: ['./boards-list.component.scss'],
-	encapsulation: ViewEncapsulation.None
+	encapsulation: ViewEncapsulation.None,
+	animations: [trigger('flyInOut', [
+		transition(':enter', [
+			style({ opacity: '0' }),
+			animate('.5s ease-out', style({ opacity: '1' })),
+		]),
+	])]
 })
 export class BoardsListComponent implements OnInit {
 	public boards: Board[];

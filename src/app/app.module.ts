@@ -3,6 +3,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {HttpClientModule} from '@angular/common/http';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 // Modules
 
@@ -43,7 +44,8 @@ import {routes} from './routes/routes';
 		AuthModule,
 		RouterModule.forRoot(routes),
 		HttpClientModule,
-		SharedModule
+		SharedModule,
+		BrowserAnimationsModule
 	],
 	providers: [BoardService, WebsocketService],
 	bootstrap: [AppComponent]

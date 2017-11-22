@@ -3,7 +3,10 @@
 </p>
 
 <div *ngFor="let board of boards">
-	<a [routerLink]="['/app/board/', board.id]">{{ board.name }}</a>
+	<a [routerLink]="['/app/board/', board.id]"
+	   [@flyInOut]="''">
+		{{ board.name }}
+	</a>
 </div>
 
 <router-outlet></router-outlet>

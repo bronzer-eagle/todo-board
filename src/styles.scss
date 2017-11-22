@@ -1,5 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
-@mixin test-mixin {
-	color: red;
-}
+@import './assets/scss/common';
+@import './assets/scss/animations';
+
+@import './assets/scss/forms';
+
