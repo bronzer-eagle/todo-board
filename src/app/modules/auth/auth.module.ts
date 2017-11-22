@@ -13,6 +13,9 @@ import { SignupComponent } from './components/signup/signup.component';
 
 import {SharedModule} from '../shared/shared.module';
 
+// Services
+import {AuthService} from './services/auth.service';
+
 @NgModule({
 	imports: [
 		CommonModule,
@@ -34,6 +37,7 @@ import {SharedModule} from '../shared/shared.module';
 			}]
 		}])
 	],
+	providers: [AuthService],
 	declarations: [AuthComponent, LoginComponent, SignupComponent],
 	bootstrap: [AuthComponent]
 })

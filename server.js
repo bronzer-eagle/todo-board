@@ -9,44 +9,54 @@ socket.on('connection', function (client) {
 	console.log('Connected!');
 
 	// Listen for test and disconnect events
-	client.on('test', onTest);
-	client.on('disconnect', onDisconnect);
+	client.on('signUp', signUp);
+	client.on('signIn', signIn);
 	client.on('getTodos', sendTodos);
+
+	client.on('disconnect', onDisconnect);
 
 	// Handle a test event from the client
 
-	function onTest(data) {
-		console.log('Received: "' + data + '" from client: ' + client.id);
-		client.emit('test', "Cheers, " + client.id);
+	function signUp(data) {
+		console.log(`Hello ${data.firstName} ${data.lastName}`);
+
+		client.emit('signUp', "Successfully registered");
 	}
 
-// Handle a disconnection from the client
+	function signIn(data) {
+		const email = 'admin@admin.com';
+		const pass = '123';
+
+		if (data.email !== email || data.password !== pass) {
+			console.log("Failed to login");
+			client.emit('signIn', {error: "Failed to login"});
+		} else {
+			console.log(`Hello user`);
+			client.emit('signIn', "Successfully signed in");
+		}
+	}
+
+
 	function onDisconnect() {
 		console.log('Received: disconnect event from client: ' + client.id);
-		client.removeListener('test', onTest);
-		client.removeListener('disconnect', onDisconnect);
 	}
 
 	function sendTodos() {
-		// fs.watch("src/assets/todo-boards.json", function(event, fileName) { //watching my        sports.json file for any changes
-		// 	//NOTE: fs.watch returns event twice on detecting change due to reason that editors fire 2 events --- there are workarounds for this on stackoverflow
 
-		jf.readFile('src/assets/todo-boards.json', function (err, data) { //if change detected read the sports.json
+		const callback = (err, data) => {
 
-			var data = data; //store in a var
-			console.log('sent') //just for debugging
-			socket.emit('setTodos', data); //emit to all clients
+			console.log('Sent todos');
+			socket.emit('setTodos', data);
 
-			setTimeout(() => {
-				updateTodos();
-			}, 10000)
-		});
+			setTimeout(() => updateTodos(), 10000);
+		};
 
-		// });
+		readJSON(callback);
 	}
 
 	function updateTodos() {
-		jf.readFile('src/assets/todo-boards.json', function (err, data) { //if change detected read the sports.json
+
+		const callback = (err, data) => {
 
 			data.push({
 				"id": 3,
@@ -62,12 +72,18 @@ socket.on('connection', function (client) {
 				}]
 			});
 
-			var data = data; //store in a var
+			console.log('Sent todos after timeout');
 
-			console.log('sent after timeout') //just for debugging
-			socket.emit('setTodos', data); //emit to all clients
-		});
+			socket.emit('setTodos', data);
+		};
+
+		readJSON(callback);
 	}
 
-
+	function readJSON(callback = () => {
+	}) {
+		jf.readFile('src/assets/todo-boards.json', function (err, data) {
+			callback(err, data);
+		});
+	}
 });

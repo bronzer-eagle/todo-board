@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import * as io from 'socket.io-client';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/race';
+import 'rxjs/add/observable/from';
 
 @Injectable()
 export class WebsocketService {
@@ -29,12 +31,16 @@ export class WebsocketService {
 	on(event) {
 		return new Observable((observer) => {
 			this.socket.on(event, data => {
-				observer.next(data);
+				if (!data.error) {
+					observer.next(data);
+				} else {
+					observer.error(data);
+				}
 			});
 		});
 	}
 
-	emit(event) {
-		this.socket.emit(event);
+	emit(event, arg = null) {
+		this.socket.emit(event, arg);
 	}
 }

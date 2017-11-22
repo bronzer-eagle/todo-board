@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {User} from '../../models/user';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
 	selector: 'app-signup',
@@ -12,7 +13,8 @@ export class SignupComponent implements OnInit {
 	birthdayParams: object;
 	signUpForm: FormGroup;
 
-	constructor(private formBuilder: FormBuilder) {
+	constructor(private formBuilder: FormBuilder,
+				private authService: AuthService) {
 	}
 
 	static _setBirthdayParams(): Object {
@@ -50,7 +52,13 @@ export class SignupComponent implements OnInit {
 	public onSubmit(): void {
 		const createdUser = new User(this.signUpForm.value);
 
-		console.log('User created: ', createdUser);
+		this.authService.signUp(createdUser)
+			.subscribe(res => {
+				console.log(res);
+				console.log('User created: ', createdUser);
+			}, err => {
+				console.log(err);
+			});
 	}
 
 	private _createForm() {
