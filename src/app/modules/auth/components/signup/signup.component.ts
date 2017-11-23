@@ -2,7 +2,7 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {User} from '../../models/user';
 import {AuthService} from '../../services/auth.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
 	selector: 'app-signup',
@@ -84,10 +84,5 @@ export class SignupComponent implements OnInit {
 				day: ['', Validators.required]
 			})
 		});
-
-		// this.signUpForm.valueChanges.subscribe(
-		// 	(value: string) => {
-		//
-		// 	});
 	}
 }
