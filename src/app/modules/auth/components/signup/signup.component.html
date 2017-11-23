@@ -1,71 +1,69 @@
-<p>
-  signup works! test
-</p>
+<form [formGroup]="signUpForm" novalidate class="form-container">
 
-<form [formGroup]="signUpForm" (submit)="onSubmit()" novalidate>
+	<h1 class="form-title">Sign up</h1>
 
-	<div class="form-input">
-		<label for="firstName">First name</label>
+	<div class="form-input-container">
+		<label for="firstName" class="form-label">First name</label>
 		<input type="text" id="firstName" placeholder="First name"
-			   name="firstName" formControlName="firstName"
+			   name="firstName" formControlName="firstName" class="form-input"
 		>
 	</div>
 
-	<div class="form-input">
-		<label for="lastName">Last name</label>
+	<div class="form-input-container">
+		<label for="lastName" class="form-label">Last name</label>
 		<input type="text" id="lastName" placeholder="Last name"
-			   name="lastName" formControlName="lastName"
+			   name="lastName" formControlName="lastName" class="form-input"
 		>
 	</div>
 
-	<div class="form-input">
-		<label for="email">Email</label>
+	<div class="form-input-container">
+		<label for="email" class="form-label">Email</label>
 		<input type="email" id="email" placeholder="Email"
-			   name="email" formControlName="email"
+			   name="email" formControlName="email" class="form-input"
 		>
 	</div>
 
-	<div class="form-input">
-		<label for="password">Password</label>
+	<div class="form-input-container">
+		<label for="password" class="form-label">Password</label>
 		<input type="password" id="password" placeholder="Password"
-			   name="password" formControlName="password"
+			   name="password" formControlName="password" class="form-input"
 		>
 	</div>
 
-	<div class="form-input">
-		<label for="passwordRepeat">Repeat password</label>
+	<div class="form-input-container">
+		<label for="passwordRepeat" class="form-label">Repeat password</label>
 		<input type="password" id="passwordRepeat" placeholder="Repeat password"
-			   name="passwordRepeat" formControlName="passwordRepeat"
+			   name="passwordRepeat" formControlName="passwordRepeat" class="form-input"
 		>
 	</div>
 
-	<div class="form-input">
-		<label for="phoneNumber">Phone number</label>
-		<input type="tel" id="phoneNumber" placeholder="Phone number"
-			   name="phoneNumber" formControlName="phoneNumber" class="test"
+	<div class="form-input-container">
+		<label for="phoneNumber" class="form-label">Phone number</label>
+		<input type="tel" id="phoneNumber" placeholder="Phone number" class="form-input"
+			   name="phoneNumber" formControlName="phoneNumber"
 		>
 	</div>
 
 	<div formGroupName="birthday">
 		<h3>Birthday</h3>
 
-		<div class="form-input">
-			<label for="birthdayYear">Year</label>
-			<select name="birthdayYear" id="birthdayYear" formControlName="year">
+		<div class="form-input-container">
+			<label for="birthdayYear" class="form-label">Year</label>
+			<select name="birthdayYear" id="birthdayYear" formControlName="year" class="form-input">
 				<option *ngFor="let year of birthdayParams.years" [value]="year">{{ year }}</option>
 			</select>
 		</div>
 
-		<div class="form-input">
-			<label for="birthdayMonth">Month</label>
-			<select name="birthdayMonth" id="birthdayMonth" formControlName="month">
+		<div class="form-input-container">
+			<label for="birthdayMonth" class="form-label">Month</label>
+			<select name="birthdayMonth" id="birthdayMonth" formControlName="month" class="form-input">
 				<option *ngFor="let month of birthdayParams.months" [value]="month">{{ month }}</option>
 			</select>
 		</div>
 
-		<div class="form-input">
-			<label for="birthdayDay">Day</label>
-			<select name="birthdayDay" id="birthdayDay" formControlName="day">
+		<div class="form-input-container">
+			<label for="birthdayDay" class="form-label">Day</label>
+			<select name="birthdayDay" id="birthdayDay" formControlName="day" class="form-input">
 				<option *ngFor="let day of birthdayParams.days" [value]="day">{{ day }}</option>
 			</select>
 		</div>
@@ -73,9 +71,14 @@
 
 	<!--<input type="tel" appCreditCardInput placeholder="Credit card">-->
 
-	<button type="submit" [disabled]="signUpForm.invalid">
+	<app-spin-btn [isDisabled]="isDisabledSubmit()" type="submit"
+				  classes="form-submit" (byClick)="onSubmit()"
+				  [spin]="processing"
+	>
 		Submit
-	</button>
+	</app-spin-btn>
+
+	<a routerLink="/auth/login" class="form-link">Already registered?</a>
 
 </form>
 

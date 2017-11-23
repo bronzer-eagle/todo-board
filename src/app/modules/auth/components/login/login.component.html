@@ -1,26 +1,27 @@
-<form [formGroup]="signInForm" (submit)="submitForm()" class="form-container">
+<form [formGroup]="signInForm" class="form-container" novalidate>
 
 	<h1 class="form-title">Login</h1>
 
 	<div class="form-input-container">
 		<label for="email" class="form-label">Email</label>
-		<input type="email" id="email" placeholder="Email"
+		<input type="email" id="email" placeholder="example@email.com"
 			   name="email" formControlName="email" class="form-input"
 		>
 	</div>
 
 	<div class="form-input-container">
 		<label for="password" class="form-label">Password</label>
-		<input type="password" id="password" placeholder="Password"
+		<input type="password" id="password" placeholder="•••••••••"
 			   name="password" formControlName="password" class="form-input"
 		>
 	</div>
 
-	<button type="submit" [disabled]="signInForm.invalid"
-			class="form-submit"
+	<app-spin-btn [isDisabled]="isDisabledSubmit()" type="submit"
+				  classes="form-submit" (byClick)="submitForm()"
+				  [spin]="processing"
 	>
 		Login
-	</button>
+	</app-spin-btn>
 
 	<a routerLink="/auth/signup" class="form-link">Not registered?</a>
 

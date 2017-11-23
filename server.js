@@ -29,13 +29,15 @@ socket.on('connection', function (client) {
 		const email = 'admin@admin.com';
 		const pass = '123';
 
-		if (data.email !== email || data.password !== pass) {
-			console.log("Failed to login");
-			client.emit('signIn', {error: "Failed to login"});
-		} else {
-			console.log(`Hello user`);
-			client.emit('signIn', "Successfully signed in");
-		}
+		setTimeout(() => {
+			if (data.email !== email || data.password !== pass) {
+				console.log("Failed to login");
+				client.emit('signIn', {error: "Failed to login"});
+			} else {
+				console.log(`Hello user`);
+				client.emit('signIn', "Successfully signed in");
+			}
+		}, 2000);
 	}
 
 	function sendTodos() {

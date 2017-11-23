@@ -1,0 +1,9 @@
+<button (click)="confirm()" [disabled]="isDisabled" type="{{ type }}" [ngClass]="classes" class="spin-btn">
+
+	<span *ngIf="!spin">
+		<ng-content></ng-content>
+	</span>
+
+	<span class="spinner" *ngIf="spin"></span>
+
+</button>

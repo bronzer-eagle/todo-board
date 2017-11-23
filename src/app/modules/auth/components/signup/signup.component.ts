@@ -13,6 +13,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class SignupComponent implements OnInit {
 	birthdayParams: object;
 	signUpForm: FormGroup;
+	processing = false;
 
 	constructor(private formBuilder: FormBuilder,
 				private authService: AuthService,
@@ -54,14 +55,19 @@ export class SignupComponent implements OnInit {
 	public onSubmit(): void {
 		const createdUser = new User(this.signUpForm.value);
 
+		this.processing = true;
+
 		this.authService.signUp(createdUser)
+			.finally(() => this.processing = false)
 			.subscribe(res => {
 				console.log(res);
 				console.log('User created: ', createdUser);
 				this.router.navigateByUrl('auth/login');
-			}, err => {
-				console.log(err);
-			});
+			}, err => console.log(err));
+	}
+
+	public isDisabledSubmit(): boolean {
+		return this.signUpForm.invalid || this.signUpForm.pending;
 	}
 
 	private _createForm() {

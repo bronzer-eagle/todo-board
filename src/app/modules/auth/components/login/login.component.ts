@@ -11,6 +11,7 @@ import {AuthService} from '../../services/auth.service';
 })
 export class LoginComponent implements OnInit {
 	public signInForm: FormGroup;
+	public processing = false;
 
 	constructor(private routeService: ActivatedRoute,
 				private router: Router,
@@ -26,14 +27,19 @@ export class LoginComponent implements OnInit {
 	public submitForm() {
 		const user = this.signInForm.value;
 
+		this.processing = true;
+
 		this.authService.signIn(user)
+			.finally(() => this.processing = false)
 			.subscribe(res => {
 				console.log(res);
 				this.authService.setLogged();
 				this.router.navigateByUrl('app/boards-list');
-			}, err => {
-				console.log(err);
-			});
+			}, err => console.log(err));
+	}
+
+	public isDisabledSubmit(): boolean {
+		return this.signInForm.invalid || this.signInForm.pending;
 	}
 
 	/**

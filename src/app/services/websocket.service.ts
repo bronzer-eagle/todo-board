@@ -3,6 +3,7 @@ import * as io from 'socket.io-client';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/race';
 import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/finally';
 
 @Injectable()
 export class WebsocketService {
