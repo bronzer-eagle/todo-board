@@ -4,11 +4,6 @@
 		transform: translateY(100%);
 	}
 
-	//20% {
-	//	opacity: 0;
-	//	transform: translateY(100%);
-	//}
-
 	100% {
 		opacity: 1;
 		transform: translateY(0);
@@ -20,11 +15,24 @@
 		opacity: 0;
 	}
 
-	//20% {
-	//	opacity: 0;
-	//}
-
 	100% {
 		opacity: 1;
+	}
+}
+
+@mixin animateHeightMixin($maxHeight: 9999px) {
+
+	@keyframes animateHeight-#{$maxHeight} {
+		0% {
+			max-height: 0;
+			overflow: hidden;
+			opacity: 0;
+		}
+
+		100% {
+			max-height: $maxHeight;
+			overflow: hidden;
+			opacity: 1;
+		}
 	}
 }

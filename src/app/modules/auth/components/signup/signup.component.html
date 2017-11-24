@@ -1,4 +1,4 @@
-<form [formGroup]="signUpForm" novalidate class="form-container">
+<form [formGroup]="signUpForm" novalidate class="form-container -large">
 
 	<h1 class="form-title">Sign up</h1>
 
@@ -72,7 +72,7 @@
 	<!--<input type="tel" appCreditCardInput placeholder="Credit card">-->
 
 	<app-spin-btn [isDisabled]="isDisabledSubmit()" type="submit"
-				  classes="form-submit" (byClick)="onSubmit()"
+				  classes="form-submit" (byClick)="submitForm()"
 				  [spin]="processing"
 	>
 		Submit

@@ -2,6 +2,10 @@
 
 	<h1 class="form-title">Login</h1>
 
+	<p class="form-input-error" *ngIf="signInForm.errors && signInForm.errors['incorrect']">
+		Incorrect email or password
+	</p>
+
 	<div class="form-input-container">
 		<label for="email" class="form-label">Email</label>
 		<input type="email" id="email" placeholder="example@email.com"

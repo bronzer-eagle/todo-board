@@ -1,3 +1,14 @@
+@mixin centeredFrom($minW: 661px, $minH: 650px) {
+	@media screen and (min-width: $minW) {
+		box-shadow: 0 0 10px 0 #959595;
+		border-radius: 10px;
+	}
+
+	@media screen and (min-width: $minW) and (min-height: $minH) {
+		@include centered;
+	}
+}
+
 .form-container {
 	width: 100%;
 	max-width: 600px;
@@ -6,7 +17,7 @@
 	padding: 35px;
 	margin: 15px auto;
 
-	animation: opacity 1s ease-in;
+	animation: opacity 0.5s ease-in;
 
 	.form-link,
 	.form-submit,
@@ -21,12 +32,12 @@
 	.form-submit,
 	.form-input-container .form-label,
 	.form-input-container .form-input {
-		animation: flyTop 1s ease-in;
+		animation: flyTop 0.5s ease-in;
 	}
 
 	.form-submit,
 	.form-input-container .form-input {
-		border: 1px solid #bfbfbf;
+		border: 1px solid $disabled-color;
 		border-radius: 50px;
 	}
 
@@ -52,9 +63,9 @@
 	.form-title {
 		margin-top: 0;
 
-		color: #5265c1;
+		color: $title-color;
 
-		animation: opacity 1.5s ease-in;
+		animation: opacity 1s ease-in;
 	}
 
 	.form-submit {
@@ -65,12 +76,12 @@
 		margin: 25px auto;
 
 		font-size: 1.2rem;
-		color: #5265c1;
+		color: $title-color;
 
 		cursor: pointer;
 
 		&:disabled {
-			color: #bfbfbf;
+			color: $disabled-color;
 		}
 
 		@extend .push-btn;
@@ -85,17 +96,21 @@
 		&,
 		&:visited,
 		&:active {
-			color: #bfbfbf;
+			color: $disabled-color;
 		}
 	}
 
-	@media screen and (min-width: 661px) {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
+	.form-input-error {
+		color: $invalid-color;
 
-		box-shadow: 0 0 10px 0 #959595;
-		border-radius: 10px;
+		@include animateHeightMixin(50px);
+		animation: animateHeight-50px 0.5s ease-in;
+	}
+
+	&:not(.-large) {
+		@include centeredFrom();
+	}
+	&.-large {
+		@include centeredFrom(661px, 1000px);
 	}
 }

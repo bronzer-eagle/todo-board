@@ -11,7 +11,7 @@ body {
 .push-btn {
 	transition: transform 0.2s ease;
 
-	&:active {
+	&:active:not(:disabled) {
 		transform: scale(0.99);
 	}
 }

@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
 				console.log(res);
 				this.authService.setLogged();
 				this.router.navigateByUrl('app/boards-list');
-			}, err => console.log(err));
+			}, () => this._handleError());
 	}
 
 	public isDisabledSubmit(): boolean {
@@ -62,5 +62,9 @@ export class LoginComponent implements OnInit {
 			'email': ['', Validators.required],
 			'password': ['', Validators.required]
 		});
+	}
+
+	private _handleError() {
+		this.signInForm.setErrors({'incorrect': true});
 	}
 }

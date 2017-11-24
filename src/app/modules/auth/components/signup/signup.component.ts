@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {User} from '../../models/user';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
+import {DataService} from '../../../shared/services/data.service';
 
 @Component({
 	selector: 'app-signup',
@@ -17,42 +18,17 @@ export class SignupComponent implements OnInit {
 
 	constructor(private formBuilder: FormBuilder,
 				private authService: AuthService,
-				private router: Router) {
-	}
-
-	static _setBirthdayParams(): Object {
-		return {
-			get years() {
-				return this._iterator(1917, 2017);
-			},
-
-			get months() {
-				return this._iterator(0, 11);
-			},
-
-			get days() {
-				return this._iterator(1, 31);
-			},
-
-			_iterator: (from, to) => {
-				const arr = [];
-
-				for (let i = from; i <= to; i++) {
-					arr.push(i);
-				}
-
-				return arr;
-			}
-		};
+				private router: Router,
+				private dataService: DataService) {
 	}
 
 	ngOnInit() {
-		this.birthdayParams = SignupComponent._setBirthdayParams();
+		this.birthdayParams = DataService.setBirthdayParams();
 
 		this._createForm();
 	}
 
-	public onSubmit(): void {
+	public submitForm(): void {
 		const createdUser = new User(this.signUpForm.value);
 
 		this.processing = true;
