@@ -44,13 +44,13 @@
 		>
 	</div>
 
-	<div formGroupName="birthday">
-		<h3>Birthday</h3>
+	<h3>Birthday</h3>
 
+	<div formGroupName="birthday" class="grid">
 		<div class="form-input-container">
 			<label for="birthdayYear" class="form-label">Year</label>
 			<select name="birthdayYear" id="birthdayYear" formControlName="year" class="form-input">
-				<option *ngFor="let year of birthdayParams.years" [value]="year">{{ year }}</option>
+				<option *ngFor="let year of birthdayParams.years.reverse()" [value]="year">{{ year }}</option>
 			</select>
 		</div>
 
@@ -68,8 +68,6 @@
 			</select>
 		</div>
 	</div>
-
-	<!--<input type="tel" appCreditCardInput placeholder="Credit card">-->
 
 	<app-spin-btn [isDisabled]="isDisabledSubmit()" type="submit"
 				  classes="form-submit" (byClick)="submitForm()"

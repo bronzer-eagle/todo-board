@@ -7,7 +7,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {AuthComponent} from './auth.component';
 import {LoginComponent} from './components/login/login.component';
-import { SignupComponent } from './components/signup/signup.component';
+import {SignupComponent} from './components/signup/signup.component';
 
 // Modules
 
@@ -24,10 +24,13 @@ import {AuthService} from './services/auth.service';
 		ReactiveFormsModule,
 		RouterModule.forChild([{
 			path: '',
+			data: {
+				hideFooter: true
+			},
 			children: [{
 				path: '',
 				pathMatch: 'full',
-				redirectTo: 'login'
+				redirectTo: 'login',
 			}, {
 				path: 'login',
 				component: LoginComponent
