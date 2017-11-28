@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {WebsocketService} from './services/websocket.service';
 import {ActivatedRoute} from '@angular/router';
+import {CommonService} from './services/common.service';
 
 @Component({
 	selector: 'app-root',
@@ -9,18 +10,16 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class AppComponent implements OnInit {
 	title = 'Todo application';
-	hideFooter: boolean;
+	hideFooter = false;
 
 	constructor(private websoketService: WebsocketService,
-				private route: ActivatedRoute) {
+				private activeRoute: ActivatedRoute) {
 	}
 
 	ngOnInit() {
-		// console.log(this.route);
-		// this.route.data.subscribe(data => {
-		// 	console.log(data);
-		// 	this.hideFooter = data['hideFooter'];
-		// });
+		this.activeRoute.data.subscribe(data => {
+			console.log(data);
+		});
 
 		this.websoketService.connect()
 			.subscribe((result = {}) => {

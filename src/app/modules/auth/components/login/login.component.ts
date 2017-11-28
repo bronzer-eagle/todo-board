@@ -2,6 +2,7 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
+import {CommonService} from '../../../../services/common.service';
 
 @Component({
 	selector: 'app-login',
@@ -16,7 +17,8 @@ export class LoginComponent implements OnInit {
 	constructor(private routeService: ActivatedRoute,
 				private router: Router,
 				private formBuilder: FormBuilder,
-				private authService: AuthService) {
+				private authService: AuthService,
+				private commonService: CommonService) {
 	}
 
 	ngOnInit() {

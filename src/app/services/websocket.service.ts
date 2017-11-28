@@ -4,6 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/race';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/finally';
+import {ActivatedRoute} from '@angular/router';
 
 @Injectable()
 export class WebsocketService {

@@ -24,9 +24,6 @@ import {AuthService} from './services/auth.service';
 		ReactiveFormsModule,
 		RouterModule.forChild([{
 			path: '',
-			data: {
-				hideFooter: true
-			},
 			children: [{
 				path: '',
 				pathMatch: 'full',

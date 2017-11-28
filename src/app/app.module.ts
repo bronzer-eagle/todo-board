@@ -29,6 +29,7 @@ import {WebsocketService} from './services/websocket.service';
 
 import {routes} from './routes/routes';
 import {DataService} from './modules/shared/services/data.service';
+import {CommonService} from './services/common.service';
 
 
 
@@ -48,7 +49,7 @@ import {DataService} from './modules/shared/services/data.service';
 		SharedModule,
 		BrowserAnimationsModule
 	],
-	providers: [BoardService, WebsocketService, DataService],
+	providers: [BoardService, WebsocketService, DataService, CommonService],
 	bootstrap: [AppComponent]
 })
 export class AppModule {
