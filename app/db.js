@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const schemes = require('./models');
+const Helper = require('./helper');
 
 mongoose.Promise = global.Promise;
 
@@ -25,9 +26,9 @@ class DB {
 				this.db = db;
 				this._loadSchemes();
 
-				console.log('DB connected.');
+				Helper.logger('DB connected.');
 			})
-			.catch(err => console.error('DB connection error:', err.message))
+			.catch(err => Helper.logger('DB connection error:', err.message))
 	}
 
 	createModel({name, schema}) {

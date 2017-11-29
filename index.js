@@ -12,12 +12,12 @@ const socket = new Websocket();
 const PORT = process.env['PORT'] || 5000;
 
 if (process.env.NODE_ENV !== 'production') {
-	console.log('NODE_ENV', process.env.NODE_ENV);
-	console.log('Loading .env file');
+	Helper.logger('NODE_ENV', process.env.NODE_ENV);
+	Helper.logger('Loading .env file');
 
 	dotenv.config();
 } else {
-	console.log('NODE_ENV', process.env.NODE_ENV);
+	Helper.logger('NODE_ENV', process.env.NODE_ENV);
 }
 
 db.init();
@@ -42,5 +42,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-	console.log('Todos application server is running on the port:', PORT);
+	Helper.logger('Todos application server is running on the port:', PORT);
 });

@@ -5,9 +5,27 @@ class AuthController {
 	constructor() {}
 
 	login(req, res) {
-		console.log(req.body);
+		const User = db.getModel('User');
 
-		res.status(200).send({data: 'success'});
+		let currentUser = {};
+
+		User.findOne({email: req.body.email})
+			.then(user => {
+				currentUser = user;
+
+				return currentUser.verifyPassword(req.body.password)
+			})
+			.then(valid => {
+				if (valid) {
+					res.apiResponse(200, {data: `Hello ${currentUser.fullname}`});
+				} else {
+					res.apiResponse(403, {data: `Incorrect email or password`});
+				}
+			})
+			.catch(error => {
+				Helper.logger('Error in login', error);
+				res.apiResponse(400, {message: 'Failed', error});
+			});
 	}
 
 	signup(req, res) {

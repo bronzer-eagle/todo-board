@@ -3,8 +3,9 @@ class Helper {
 	static logger() {
 		const logs = [...arguments];
 
-		console.log(`${Helper.getLogTime()}:==============`);
+		console.info(`${Helper.getLogTime()}:`);
 		logs.forEach(log => console.log(log));
+		console.log('=====================================');
 	}
 
 	static getLogTime() {

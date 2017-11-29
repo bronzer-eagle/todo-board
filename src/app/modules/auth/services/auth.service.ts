@@ -16,14 +16,7 @@ export class AuthService {
 	}
 
 	signIn(user: User) {
-		this.socket.emit('signIn', user);
-
-		this.http.post('http://localhost:5000/api/auth/login', 'test')
-			.subscribe(res => {
-				console.log(res);
-			});
-
-		return this.socket.on('signIn');
+		return this.http.post('http://localhost:5000/api/auth/login', user);
 	}
 
 	setLogged() {
