@@ -30,4 +30,7 @@ export class User {
 	public checkPassword() {
 		return this.password === this.passwordRepeat;
 	}
+
+	public transform() {
+	}
 }

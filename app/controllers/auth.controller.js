@@ -1,9 +1,8 @@
 const db = require('../db');
+const Helper = require('../helper');
 
 class AuthController {
-	constructor() {
-
-	}
+	constructor() {}
 
 	login(req, res) {
 		console.log(req.body);
@@ -13,10 +12,19 @@ class AuthController {
 
 	signup(req, res) {
 		const user = req.body;
+		const User = db.getModel('User');
 
-		db.insertToCollection('users', user);
+		User.create(user)
+			.then(data => {
+				Helper.logger('New user was created:', data.fullname);
 
-		res.status(200).send({data: 'success'});
+				res.apiResponse(200, {data: 'User was successfully created.'});
+			})
+			.catch(error => {
+				Helper.logger('New user was not created:', error);
+
+				res.apiResponse(400, {message: 'Failed', error});
+			});
 	}
 }
 

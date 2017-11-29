@@ -12,14 +12,7 @@ export class AuthService {
 	}
 
 	signUp(user: User) {
-		this.socket.emit('signUp', user);
-
-		this.http.post('http://localhost:5000/api/auth/signup', user)
-			.subscribe(res => {
-				console.log(res);
-			});
-
-		return this.socket.on('signUp');
+		return this.http.post('http://localhost:5000/api/auth/signup', user);
 	}
 
 	signIn(user: User) {

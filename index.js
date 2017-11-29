@@ -1,12 +1,24 @@
+const dotenv = require('dotenv');
 const express = require('express');
+const bodyParser = require('body-parser');
+
 const Websocket = require('./app/websockets');
 const db = require('./app/db');
 const [authRoutes] = require('./app/routes/index');
-const bodyParser = require('body-parser');
+const Helper = require('./app/helper');
 
-const
-app = express();
+const app = express();
 const socket = new Websocket();
+const PORT = process.env['PORT'] || 5000;
+
+if (process.env.NODE_ENV !== 'production') {
+	console.log('NODE_ENV', process.env.NODE_ENV);
+	console.log('Loading .env file');
+
+	dotenv.config();
+} else {
+	console.log('NODE_ENV', process.env.NODE_ENV);
+}
 
 db.init();
 socket.init();
@@ -14,6 +26,9 @@ socket.init();
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+	res.constructor.prototype.apiResponse = new Helper().apiResponse;
+
 	next();
 });
 
@@ -23,9 +38,9 @@ app.use(bodyParser.json());
 app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => {
-	res.send('hello')
+	res.send('Server is working')
 });
 
-app.listen(5000, () => {
-	console.log('Test server is running');
+app.listen(PORT, () => {
+	console.log('Todos application server is running on the port:', PORT);
 });

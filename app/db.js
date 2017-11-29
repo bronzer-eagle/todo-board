@@ -1,10 +1,13 @@
-const stitch = require("mongodb-stitch");
-const client = new stitch.StitchClient('todoapp-ypcxy');
-const db = client.service('mongodb', 'mongodb-atlas').db('todos');
+const mongoose = require('mongoose');
 
+const schemes = require('./models');
+
+mongoose.Promise = global.Promise;
 
 class DB {
-	constructor() {
+	constructor(schemes = []) {
+		this.schemes = schemes;
+		this.models = [];
 	}
 
 	init() {
@@ -12,31 +15,42 @@ class DB {
 	}
 
 	connect() {
-		client
-			.login()
-			.then(() => {
-				console.log("[MongoDB Stitch] Connected to Stitch")
+		const uri = process.env['DBURI'];
+		const options = {
+			useMongoClient: true
+		};
+
+		mongoose.connect(uri, options)
+			.then((db) => {
+				this.db = db;
+				this._loadSchemes();
+
+				console.log('DB connected.');
 			})
-			.catch(err => {
-				console.error(err)
-			});
+			.catch(err => console.error('DB connection error:', err.message))
 	}
 
-	insertToCollection(collection, data) {
-		db.collection(collection).insertOne(data)
-			.then(() => {
-				console.log('inserted');
-			})
+	createModel({name, schema}) {
+		let model = this.db.model(name, schema);
+
+		this.models.push(model);
+
+		return model;
+	}
+
+	getModel(name) {
+		return this.db.model(name);
+	}
+
+	// Private
+
+	_loadSchemes() {
+		this.schemes.forEach(schema => {
+			this.createModel(schema);
+		});
 	}
 }
 
-const dbInstance = new DB();
+const dbInstance = new DB(schemes);
 
 module.exports = dbInstance;
-
-
-// 	.then(() =>
-//
-// ).then(() =>
-// 	db.collection('users').find({owner_id: client.authedId()}).limit(100).execute()
-// )

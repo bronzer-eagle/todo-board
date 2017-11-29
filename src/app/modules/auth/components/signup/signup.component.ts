@@ -35,11 +35,14 @@ export class SignupComponent implements OnInit {
 
 		this.authService.signUp(createdUser)
 			.finally(() => this.processing = false)
-			.subscribe(res => {
-				console.log(res);
-				console.log('User created: ', createdUser);
-				this.router.navigateByUrl('auth/login');
-			}, err => console.log(err));
+			.subscribe(
+				res => {
+					console.log(res);
+					console.log('User created: ', createdUser);
+					this.router.navigateByUrl('auth/login');
+				},
+				err => console.log(err)
+			);
 	}
 
 	public isDisabledSubmit(): boolean {
