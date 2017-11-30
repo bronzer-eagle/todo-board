@@ -45,6 +45,8 @@ export class WebsocketService {
 	}
 
 	emit(event, arg = null) {
-		this.socket.emit(event, arg);
+		if (this.socket) {
+			this.socket.emit(event, arg);
+		}
 	}
 }
