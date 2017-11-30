@@ -1,13 +1,17 @@
 const socket = require('socket.io');
 const jf = require('jsonfile');
+const jwtAuth = require('socketio-jwt-auth');
+const DB = require('./db');
 
 class SocketServer {
 	constructor(port = 3000) {
 		this.port = port;
+		this.db = new DB();
 	}
 
 	init() {
 		this.connect();
+		this._setAuthMiddleware();
 		this._connectionHandler();
 	}
 
@@ -15,48 +19,49 @@ class SocketServer {
 		this.socket = socket(this.port);
 	}
 
+	_setAuthMiddleware() {
+		this.socket.use(jwtAuth.authenticate({
+			secret: process.env.JWTSecret,
+			succeedWithoutToken: true
+		}, (payload, done) => {
+			const User = this.db.getModel('User');
+
+			// done is a callback, you can use it as follows
+			User.findOne({id: payload.sub}, function(err, user) {
+				if (err) {
+					// return error
+					return done(err);
+				}
+				if (!user) {
+					// return fail with an error message
+					return done(null, false, 'user does not exist');
+				}
+				// return success with a user info
+				return done(null, user);
+			});
+		}));
+	}
+
 	_connectionHandler() {
 		this.socket.on('connection', (client) => {
 
 			console.log('Connected!');
-
 			this.client = client;
 
-			// Listen for test and disconnect events
-			this.client.on('signUp', this.signUp.bind(this));
-			this.client.on('signIn', this.signIn.bind(this));
-			this.client.on('getTodos', this.sendTodos.bind(this));
-			this.client.on('disconnect', () => {
-				console.log('Received: disconnect event from client: ' + this.client.id);
-			});
+			this._setListeners();
 		});
 	}
 
-	// Handlers
+	_setListeners() {
+		// Listen for test and disconnect events
 
-	signUp(data) {
-		console.log(`Hello ${data.firstName} ${data.lastName}`);
-
-		this.client.emit('signUp', "Successfully registered");
-	}
-
-	signIn(data) {
-		const email = 'admin@admin.com';
-		const pass = '123';
-
-		setTimeout(() => {
-			if (data.email !== email || data.password !== pass) {
-				console.log("Failed to login");
-				this.client.emit('signIn', {error: "Failed to login"});
-			} else {
-				console.log(`Hello user`);
-				this.client.emit('signIn', "Successfully signed in");
-			}
-		}, 2000);
+		this.client.on('getTodos', this.sendTodos.bind(this));
+		this.client.on('disconnect', () => {
+			console.log('Received: disconnect event from client: ' + this.client.id);
+		});
 	}
 
 	sendTodos() {
-
 		const callback = (err, data) => {
 
 			console.log('Sent todos');
@@ -94,7 +99,7 @@ class SocketServer {
 		this.readJSON(callback);
 	}
 
-	readJSON(callback = () => {}) {
+	readJSON(callback = function () {}) {
 		jf.readFile('src/assets/todo-boards.json', (err, data) => {
 			callback(err, data);
 		});

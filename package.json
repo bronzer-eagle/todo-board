@@ -25,11 +25,15 @@
 		"body-parser": "^1.18.2",
 		"core-js": "^2.4.1",
 		"dotenv": "^4.0.0",
+		"jsonwebtoken": "^8.1.0",
 		"lodash": "^4.17.4",
 		"mongoose": "^4.13.5",
 		"mongoose-bcrypt": "^1.5.0",
+		"passport": "^0.4.0",
+		"passport-local": "^1.0.0",
 		"rxjs": "^5.5.2",
 		"socket.io": "^2.0.4",
+		"socketio-jwt-auth": "^0.0.6",
 		"zone.js": "^0.8.14"
 	},
 	"devDependencies": {

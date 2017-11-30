@@ -1,11 +1,13 @@
-const db = require('../db');
+const DB = require('../db');
 const Helper = require('../helper');
 
 class AuthController {
-	constructor() {}
+	constructor() {
+		this.db = new DB();
+	}
 
 	login(req, res) {
-		const User = db.getModel('User');
+		const User = this.db.getModel('User');
 
 		let currentUser = {};
 
@@ -17,9 +19,14 @@ class AuthController {
 			})
 			.then(valid => {
 				if (valid) {
-					res.apiResponse(200, {data: `Hello ${currentUser.fullname}`});
+
+					res.apiResponse(200, {
+						message: `Hello ${currentUser.fullname}`,
+						user: currentUser,
+						jwt: currentUser.generateJwt()
+					});
 				} else {
-					res.apiResponse(403, {data: `Incorrect email or password`});
+					res.apiResponse(403, {message: `Incorrect email or password`});
 				}
 			})
 			.catch(error => {
@@ -30,7 +37,7 @@ class AuthController {
 
 	signup(req, res) {
 		const user = req.body;
-		const User = db.getModel('User');
+		const User = this.db.getModel('User');
 
 		User.create(user)
 			.then(data => {

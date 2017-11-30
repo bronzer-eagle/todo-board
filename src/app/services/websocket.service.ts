@@ -16,17 +16,19 @@ export class WebsocketService {
 	connect() {
 		return new Observable((observer) => {
 			const testServer = 'localhost:3000';
+			const jwt = localStorage.getItem('jwt');
 
-			this.socket = io.connect(testServer);
+			if (jwt) {
+				this.socket = io.connect(testServer, {query: `auth_token=${jwt}`});
 
-			this.socket.on('connect', () => {
-				observer.next({status: 'Connected'});
-			});
+				this.socket.on('connect', () => {
+					observer.next({status: 'Connected'});
+				});
 
-			this.socket.on('connect_error', (error) => {
-				observer.error({message: 'Not connected:', error});
-			});
-
+				this.socket.on('connect_error', (error) => {
+					observer.error({message: 'Not connected:', error});
+				});
+			}
 		});
 	}
 

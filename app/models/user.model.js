@@ -1,6 +1,7 @@
 const _capitalize = require('lodash/capitalize');
 const mongoose = require('mongoose');
 const bcrypt = require('mongoose-bcrypt');
+const jwt = require('jsonwebtoken');
 
 const Validator = require('../validator');
 
@@ -35,6 +36,22 @@ class UserModel {
 	get fullname() {
 		return this.firstName + ' ' + this.lastName;
 	}
+
+	generateJwt(addData = {}) {
+		let options, expiry = new Date();
+
+		expiry.setDate(expiry.getDate() + 7);
+
+		options = {
+			_id: this._id,
+			email: this.email,
+			exp: parseInt(expiry.getTime() / 1000)
+		};
+
+		Object.assign(options, addData);
+
+		return jwt.sign(options, process.env.JWTSecret);
+	};
 }
 
 userSchema.loadClass(UserModel);

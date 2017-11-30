@@ -21,10 +21,10 @@ export class GuardService implements CanActivateChild {
 	}
 
 	private _checkStorage(): boolean {
-		const data = window.localStorage.getItem('isLogged');
+		const data = window.localStorage.getItem('jwt');
 
 		if (data) {
-			return !!JSON.parse(data);
+			return !!data;
 		}
 
 		return false;

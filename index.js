@@ -3,44 +3,74 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const Websocket = require('./app/websockets');
-const db = require('./app/db');
-const [authRoutes] = require('./app/routes/index');
+const DB = require('./app/db');
 const Helper = require('./app/helper');
 
-const app = express();
-const socket = new Websocket();
-const PORT = process.env['PORT'] || 5000;
+class Application {
+	constructor() {
+		this.PORT = process.env['PORT'] || 5000;
+		this.ENV = process.env.NODE_ENV;
+		this.socket = new Websocket();
+		this.db = new DB();
 
-if (process.env.NODE_ENV !== 'production') {
-	Helper.logger('NODE_ENV', process.env.NODE_ENV);
-	Helper.logger('Loading .env file');
+		this.app = express();
+	}
 
-	dotenv.config();
-} else {
-	Helper.logger('NODE_ENV', process.env.NODE_ENV);
+	init() {
+		this._loadEnvironment();
+		this._initComponents();
+	}
+
+	_loadEnvironment() {
+		Helper.logger('NODE_ENV', this.ENV);
+
+		if (this.ENV !== 'production') {
+			Helper.logger('Loading .env file');
+			dotenv.config();
+		}
+	}
+
+	_initComponents() {
+		this.db.init().then(() => {
+			this.socket.init();
+
+			this._setConfigs();
+			this._setRoutes();
+			this._listen();
+		});
+	}
+
+	_setConfigs() {
+		this.app.use((req, res, next) => {
+			res.header("Access-Control-Allow-Origin", "*");
+			res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+			res.constructor.prototype.apiResponse = new Helper().apiResponse;
+
+			next();
+		});
+
+		this.app.use(bodyParser.urlencoded({extended: false}));
+		this.app.use(bodyParser.json());
+	}
+
+	_setRoutes() {
+		const [authRoutes] = require('./app/routes/index');
+
+		this.app.use('/api/auth', authRoutes);
+
+		this.app.get('/', (req, res) => {
+			res.send('Server is working')
+		});
+	}
+
+	_listen() {
+		this.app.listen(this.PORT, () => {
+			Helper.logger('Todos application server is running on the port:', this.PORT);
+		});
+	}
 }
 
-db.init();
-socket.init();
+const app = new Application();
 
-app.use((req, res, next) => {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-
-	res.constructor.prototype.apiResponse = new Helper().apiResponse;
-
-	next();
-});
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-app.use('/api/auth', authRoutes);
-
-app.get('/', (req, res) => {
-	res.send('Server is working')
-});
-
-app.listen(PORT, () => {
-	Helper.logger('Todos application server is running on the port:', PORT);
-});
+app.init();

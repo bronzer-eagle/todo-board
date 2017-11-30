@@ -1,18 +1,26 @@
 const mongoose = require('mongoose');
-
-const schemes = require('./models');
 const Helper = require('./helper');
+const schemes = require('./models');
 
 mongoose.Promise = global.Promise;
 
+let self = null;
+
 class DB {
-	constructor(schemes = []) {
-		this.schemes = schemes;
-		this.models = [];
+	constructor() {
+
+		if (!self) {
+			self = this;
+
+			this.schemes = schemes || [];
+			this.models = [];
+		}
+
+		return self;
 	}
 
 	init() {
-		this.connect();
+		return this.connect();
 	}
 
 	connect() {
@@ -21,7 +29,7 @@ class DB {
 			useMongoClient: true
 		};
 
-		mongoose.connect(uri, options)
+		return mongoose.connect(uri, options)
 			.then((db) => {
 				this.db = db;
 				this._loadSchemes();
@@ -52,6 +60,4 @@ class DB {
 	}
 }
 
-const dbInstance = new DB(schemes);
-
-module.exports = dbInstance;
+module.exports = DB;

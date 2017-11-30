@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {WebsocketService} from './services/websocket.service';
 import {ActivatedRoute} from '@angular/router';
 import {CommonService} from './services/common.service';
+import {AuthService} from './services/auth.service';
 
 @Component({
 	selector: 'app-root',
@@ -13,20 +14,20 @@ export class AppComponent implements OnInit {
 	hideFooter = false;
 
 	constructor(private websoketService: WebsocketService,
-				private activeRoute: ActivatedRoute) {
+				private authService: AuthService) {
 	}
 
 	ngOnInit() {
-		this.activeRoute.data.subscribe(data => {
-			console.log(data);
+		this.authService.isLogged.subscribe(flag => {
+			if (flag) {
+				this.websoketService.connect()
+					.subscribe((result = {}) => {
+						console.log(`Root component connected! Status: ${result['status']}`);
+					}, err => {
+						console.log('Some error occured:', err['message']);
+						console.log(err['error']);
+					});
+			}
 		});
-
-		this.websoketService.connect()
-			.subscribe((result = {}) => {
-				console.log(`Root component connected! Status: ${result['status']}`);
-			}, err => {
-				console.log('Some error occured:', err['message']);
-				console.log(err['error']);
-			});
 	}
 }
