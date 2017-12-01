@@ -1,0 +1,26 @@
+.app-button {
+
+	display: block;
+
+	padding: 10px 15px;
+	margin: 15px 0;
+
+	cursor: pointer;
+
+	&.-inline {
+
+	}
+}
+
+.close-button {
+	border: 0;
+
+	background: none;
+	color: $disabled-color;
+
+	position: absolute;
+	top: 10px;
+	left: 10px;
+
+	cursor: pointer;
+}

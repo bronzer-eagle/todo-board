@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {WebsocketService} from './services/websocket.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {CommonService} from './services/common.service';
-import {AuthService} from './services/auth.service';
+import {AuthService} from './modules/auth/services/auth.service';
 
 @Component({
 	selector: 'app-root',
@@ -10,24 +10,46 @@ import {AuthService} from './services/auth.service';
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-	title = 'Todo application';
-	hideFooter = false;
+	isLogged = false;
 
 	constructor(private websoketService: WebsocketService,
-				private authService: AuthService) {
+				private authService: AuthService,
+				private router: Router) {
 	}
 
 	ngOnInit() {
+		this.listenForLogin();
+
+		this.isAuthRoutes();
+	}
+
+	listenForLogin() {
 		this.authService.isLogged.subscribe(flag => {
-			if (flag) {
-				this.websoketService.connect()
-					.subscribe((result = {}) => {
-						console.log(`Root component connected! Status: ${result['status']}`);
-					}, err => {
-						console.log('Some error occured:', err['message']);
-						console.log(err['error']);
-					});
+
+			this.isLogged = flag;
+
+			if (this.isLogged) {
+				this.connectWebsocket();
 			}
 		});
+	}
+
+	connectWebsocket() {
+		this.websoketService.connect()
+			.subscribe((result = {}) => {
+				console.log(`Root component connected! Status: ${result['status']}`);
+			}, err => {
+				console.log('Some error occured:', err['message']);
+				console.log(err['error']);
+			});
+	}
+
+	isAuthRoutes() {
+		const availAbleRoutes = ['auth'];
+		const availables = availAbleRoutes.filter(route => {
+			return this.router.url.indexOf(route) !== -1;
+		});
+
+		return availables.length !== 0;
 	}
 }

@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from '../../../../services/auth.service';
+import {AuthService} from '../../services/auth.service';
 import {CommonService} from '../../../../services/common.service';
 
 @Component({
@@ -34,8 +34,6 @@ export class LoginComponent implements OnInit {
 		this.authService.signIn(user)
 			.finally(() => this.processing = false)
 			.subscribe(res => {
-				console.log(res);
-				this.authService.setLogged();
 				this.router.navigateByUrl('app/boards-list');
 			}, () => this._handleError());
 	}

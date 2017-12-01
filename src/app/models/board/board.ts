@@ -12,7 +12,7 @@ export class Board {
 	static transformer(source) {
 		const data = {
 			id: source.id,
-			name: source.board_name,
+			name: source.boardName,
 			tasks: source.tasks.map(Todo.transformer)
 		};
 

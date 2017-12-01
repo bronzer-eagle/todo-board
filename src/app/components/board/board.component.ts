@@ -32,7 +32,7 @@ export class BoardComponent implements OnInit {
 
 	private _setCurrentBoard(): void {
 		this.router.params
-			.map(data => parseInt(data.id, 10))
+			.map(data => data.id)
 			.switchMap(id => {
 				return this.boardService.returnBoardData(id);
 			})

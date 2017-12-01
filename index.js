@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
+const jwt = require('express-jwt');
 
 const Websocket = require('./app/websockets');
 const DB = require('./app/db');
@@ -43,21 +44,26 @@ class Application {
 	_setConfigs() {
 		this.app.use((req, res, next) => {
 			res.header("Access-Control-Allow-Origin", "*");
-			res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+			res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
 
 			res.constructor.prototype.apiResponse = new Helper().apiResponse;
 
 			next();
 		});
 
+		this.app.use(jwt({ secret: process.env.JWTSecret}).unless({path: [/\/api\/auth\/\w*/]}));
 		this.app.use(bodyParser.urlencoded({extended: false}));
 		this.app.use(bodyParser.json());
 	}
 
 	_setRoutes() {
-		const [authRoutes] = require('./app/routes/index');
+		const [
+			authRoutes,
+			boardsRoutes
+		] = require('./app/routes/index');
 
 		this.app.use('/api/auth', authRoutes);
+		this.app.use('/api/boards', boardsRoutes);
 
 		this.app.get('/', (req, res) => {
 			res.send('Server is working')

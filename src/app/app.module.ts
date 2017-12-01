@@ -1,8 +1,8 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 // Modules
@@ -30,7 +30,7 @@ import {WebsocketService} from './services/websocket.service';
 import {routes} from './routes/routes';
 import {DataService} from './modules/shared/services/data.service';
 import {CommonService} from './services/common.service';
-import {AuthService} from './services/auth.service';
+import {AuthInterceptor} from './services/auth.interceptor';
 
 
 
@@ -44,13 +44,18 @@ import {AuthService} from './services/auth.service';
 	imports: [
 		BrowserModule,
 		FormsModule,
+		ReactiveFormsModule,
 		AuthModule,
 		RouterModule.forRoot(routes),
 		HttpClientModule,
 		SharedModule,
 		BrowserAnimationsModule
 	],
-	providers: [BoardService, WebsocketService, DataService, CommonService, AuthService],
+	providers: [BoardService, WebsocketService, DataService, CommonService, {
+		provide: HTTP_INTERCEPTORS,
+		useClass: AuthInterceptor,
+		multi: true,
+	}],
 	bootstrap: [AppComponent]
 })
 export class AppModule {

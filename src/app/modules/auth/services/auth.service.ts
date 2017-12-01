@@ -1,32 +1,37 @@
 import {Injectable} from '@angular/core';
-import {WebsocketService} from './websocket.service';
-import {User} from '../modules/auth/models/user';
+import {WebsocketService} from '../../../services/websocket.service';
+import {User} from '../models/user';
 import {HttpClient} from '@angular/common/http';
 
 import 'rxjs/add/operator/do';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {CommonService} from '../../../services/common.service';
 
 @Injectable()
 export class AuthService {
 	public isLogged: BehaviorSubject<boolean> = new BehaviorSubject(null);
 
-	constructor(private socket: WebsocketService,
+	constructor(private commonService: CommonService,
 				private http: HttpClient) {
 		this.checkLogin();
 	}
 
 	checkLogin() {
-		const jwt = localStorage.getItem('jwt');
+		const jwt = this.getToken();
 
 		this.isLogged.next(!!jwt);
 	}
 
+	getToken() {
+		return localStorage.getItem('jwt');
+	}
+
 	signUp(user: User) {
-		return this.http.post('http://localhost:5000/api/auth/signup', user);
+		return this.http.post(this.commonService.apiPrefixed('auth/signup'), user);
 	}
 
 	signIn(user: User) {
-		return this.http.post('http://localhost:5000/api/auth/login', user).do(res => {
+		return this.http.post(this.commonService.apiPrefixed('auth/login'), user).do(res => {
 			const jwt = res['jwt'];
 
 			if (jwt) {

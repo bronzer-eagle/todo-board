@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {User} from '../../models/user';
-import {AuthService} from '../../../../services/auth.service';
+import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
 import {DataService} from '../../../shared/services/data.service';
 
@@ -57,11 +57,11 @@ export class SignupComponent implements OnInit {
 			phoneNumber: ['', Validators.required],
 			password: ['', Validators.required],
 			passwordRepeat: ['', Validators.required],
-			birthday: this.formBuilder.group({
-				year: ['', Validators.required],
-				month: ['', Validators.required],
-				day: ['', Validators.required]
-			})
+			// birthday: this.formBuilder.group({
+			// 	year: ['', Validators.required],
+			// 	month: ['', Validators.required],
+			// 	day: ['', Validators.required]
+			// })
 		});
 	}
 }

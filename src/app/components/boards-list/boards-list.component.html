@@ -1,9 +1,43 @@
-<section class="board-list">
+<section class="board-list" *ngIf="!boardCreationMode">
+
+	<button class="app-button create-board-btn" (click)="enableBoardCreationMode()">
+		Add board
+	</button>
+
 	<div *ngFor="let board of boards" class="board-item">
 		<a [routerLink]="['/app/board/', board.id]"
 		   [@flyInOut]="''" class="boar-item-link"></a>
 
-			<span class="boar-item-text">{{ board.name }}</span>
+		<span class="boar-item-text">{{ board.name }}</span>
 
 	</div>
+
 </section>
+
+<!--TODO: move it to separate component-->
+
+<form [formGroup]="boardCreator" class="form-container board-creator" novalidate *ngIf="boardCreationMode">
+
+	<button class="fa fa-times close-button" (click)="disableBoardCreationMode()"></button>
+
+	<h1 class="form-title">Board creator</h1>
+
+	<div class="form-input-container">
+		<label for="boardName" class="form-label">Board name</label>
+		<input type="text" id="boardName" placeholder="New todo board"
+			   name="boardName" formControlName="boardName" class="form-input"
+		>
+	</div>
+
+	<p class="form-input-error" *ngIf="boardCreator.errors">
+		The field is required
+	</p>
+
+	<app-spin-btn classes="form-submit"
+				  [isDisabled]="boardCreator.invalid"
+				  [spin]="processing"
+				  (byClick)="addNewBoard()">
+		Submit
+	</app-spin-btn>
+
+</form>

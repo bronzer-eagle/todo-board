@@ -44,30 +44,30 @@
 		>
 	</div>
 
-	<h3>Birthday</h3>
+	<!--<h3>Birthday</h3>-->
 
-	<div formGroupName="birthday" class="grid">
-		<div class="form-input-container">
-			<label for="birthdayYear" class="form-label">Year</label>
-			<select name="birthdayYear" id="birthdayYear" formControlName="year" class="form-input">
-				<option *ngFor="let year of birthdayParams.years.reverse()" [value]="year">{{ year }}</option>
-			</select>
-		</div>
+	<!--<div formGroupName="birthday" class="grid">-->
+		<!--<div class="form-input-container">-->
+			<!--<label for="birthdayYear" class="form-label">Year</label>-->
+			<!--<select name="birthdayYear" id="birthdayYear" formControlName="year" class="form-input">-->
+				<!--<option *ngFor="let year of birthdayParams.years.reverse()" [value]="year">{{ year }}</option>-->
+			<!--</select>-->
+		<!--</div>-->
 
-		<div class="form-input-container">
-			<label for="birthdayMonth" class="form-label">Month</label>
-			<select name="birthdayMonth" id="birthdayMonth" formControlName="month" class="form-input">
-				<option *ngFor="let month of birthdayParams.months" [value]="month">{{ month }}</option>
-			</select>
-		</div>
+		<!--<div class="form-input-container">-->
+			<!--<label for="birthdayMonth" class="form-label">Month</label>-->
+			<!--<select name="birthdayMonth" id="birthdayMonth" formControlName="month" class="form-input">-->
+				<!--<option *ngFor="let month of birthdayParams.months" [value]="month">{{ month }}</option>-->
+			<!--</select>-->
+		<!--</div>-->
 
-		<div class="form-input-container">
-			<label for="birthdayDay" class="form-label">Day</label>
-			<select name="birthdayDay" id="birthdayDay" formControlName="day" class="form-input">
-				<option *ngFor="let day of birthdayParams.days" [value]="day">{{ day }}</option>
-			</select>
-		</div>
-	</div>
+		<!--<div class="form-input-container">-->
+			<!--<label for="birthdayDay" class="form-label">Day</label>-->
+			<!--<select name="birthdayDay" id="birthdayDay" formControlName="day" class="form-input">-->
+				<!--<option *ngFor="let day of birthdayParams.days" [value]="day">{{ day }}</option>-->
+			<!--</select>-->
+		<!--</div>-->
+	<!--</div>-->
 
 	<app-spin-btn [isDisabled]="isDisabledSubmit()" type="submit"
 				  classes="form-submit" (byClick)="submitForm()"

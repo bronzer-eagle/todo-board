@@ -12,13 +12,16 @@ import 'rxjs/add/operator/do';
 import {Todo} from '../models/todo/todo';
 import {Board} from '../models/board/board';
 import {WebsocketService} from './websocket.service';
+import {CommonService} from './common.service';
 
 @Injectable()
 export class BoardService {
 	tasksList: BehaviorSubject<Todo[]> = new BehaviorSubject<Todo[]>([]);
 	boards: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
 
-	constructor(private http: HttpClient, private socket: WebsocketService) {
+	constructor(private http: HttpClient,
+				private socket: WebsocketService,
+				private commonService: CommonService) {
 		this.getBoardsList()
 			.subscribe(this.boards);
 	}
@@ -31,7 +34,7 @@ export class BoardService {
 	 */
 
 	public getBoardsList(): Observable<any> {
-		const listener = this.socket.on('setTodos').map((res: any) => {
+		const listener = this.socket.on('setTodos').map((res: [object]) => {
 			console.log(res);
 			return res.map(Board.transformer);
 		});
@@ -64,12 +67,6 @@ export class BoardService {
 
 	// Actions
 
-	public generateRandomTasks(amount: number = 3): void {
-		for (let i = 0; i < amount; i++) {
-			this.addNewTask(`Some random task #${i + 1}`);
-		}
-	}
-
 	public addNewTask(taskText: string): void {
 		const currentList = this.tasksList.getValue();
 
@@ -81,7 +78,6 @@ export class BoardService {
 	public isEmptyTasksList(): boolean {
 		return this.tasksList.getValue().length === 0;
 	}
-
 
 	public changeTaskStatus(id, isCompleted): void {
 		const currentList = this.tasksList.getValue();
@@ -104,6 +100,12 @@ export class BoardService {
 		currentList.splice(index, 1);
 
 		this.tasksList.next(currentList);
+	}
+
+	// Boards flow
+
+	public createBoard(data) {
+		return this.http.post(this.commonService.apiPrefixed('boards'), data).do(res => {});
 	}
 
 	//
@@ -140,9 +142,7 @@ export class BoardService {
 	}
 
 	private _getBoardDataById(id: number, boards: Board[]): Board {
-		const filtered = boards.filter(board => {
-			return board.id === id;
-		});
+		const filtered = boards.filter(board => board.id === id);
 		const currentBoard = filtered[0];
 
 		if (currentBoard) {
