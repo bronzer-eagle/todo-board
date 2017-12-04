@@ -21,7 +21,14 @@ class TasksController {
 			board.tasks.push(task._id);
 			board.save();
 
-			res.apiResponse(200, {message: 'Successfully added new task to the board.'});
+			res.apiResponse(200, {
+				message: 'Successfully added new task to the board.',
+				task: {
+					text: task.text,
+					isCompleted: task.isCompleted,
+					id: task.id
+				}
+			});
 		});
 	}
 }

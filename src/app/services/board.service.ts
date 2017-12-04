@@ -72,7 +72,7 @@ export class BoardService {
 		this.http.post(url, {text: taskText})
 			.subscribe(res => {
 				console.log(res);
-				currentList.push(this._createNewTodoTask(taskText));
+				currentList.push(new Todo(res['task']));
 
 				this.tasksList.next(currentList);
 			});
@@ -121,28 +121,6 @@ export class BoardService {
 	}
 
 	// Private helpers
-
-	private _generateTaskId(): number {
-		const list = this.tasksList.getValue();
-
-		if (list && list.length) {
-			const id = list[list.length - 1].id;
-
-			return id + 1;
-		}
-
-		return 0;
-	}
-
-	private _createNewTodoTask(taskText: string): Todo {
-		const params = {
-			id: this._generateTaskId(),
-			text: taskText,
-			isCompleted: false
-		};
-
-		return new Todo(params);
-	}
 
 	private _getBoardDataById(id: string, boards: Board[]): Board {
 		const filtered = boards.filter(board => board.id === id);
