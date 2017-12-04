@@ -60,7 +60,7 @@ export class BoardService {
 			});
 		}
 
-		return this.boards.map(boards => this._getBoardDataById(id, boards));
+		return this.getBoardsList().map(boards => this._getBoardDataById(id, boards));
 	}
 
 	// Actions
@@ -108,8 +108,7 @@ export class BoardService {
 	// Boards flow
 
 	public createBoard(data) {
-		return this.http.post(this.commonService.apiPrefixed('boards'), data).do(res => {
-		});
+		return this.http.post(this.commonService.apiPrefixed('boards'), data).do(res => {});
 	}
 
 	//
