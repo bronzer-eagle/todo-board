@@ -22,8 +22,6 @@ export class BoardService {
 	constructor(private http: HttpClient,
 				private socket: WebsocketService,
 				private commonService: CommonService) {
-		this.getBoardsList()
-			.subscribe(this.boards);
 	}
 
 	// Endpoints
@@ -34,10 +32,10 @@ export class BoardService {
 	 */
 
 	public getBoardsList(): Observable<any> {
-		const listener = this.socket.on('setTodos').map((res: [object]) => {
-			console.log(res);
-			return res.map(Board.transformer);
-		});
+		const listener = this.socket.on('setTodos')
+			.map((res: [object]) => res.map(Board.transformer));
+
+		listener.subscribe(this.boards);
 
 		this.socket.emit('getTodos');
 
@@ -50,7 +48,7 @@ export class BoardService {
 	 * @returns {Observable<any>}
 	 */
 
-	public returnBoardData(id: number): Observable<any> {
+	public returnBoardData(id: string): Observable<any> {
 		const boardsList = this.boards.getValue();
 		const listExists = boardsList && boardsList.length;
 
@@ -67,12 +65,17 @@ export class BoardService {
 
 	// Actions
 
-	public addNewTask(taskText: string): void {
+	public addNewTask(taskText: string, id: string): void {
 		const currentList = this.tasksList.getValue();
+		const url = this.commonService.apiPrefixed(`boards/${id}/tasks`);
 
-		currentList.push(this._createNewTodoTask(taskText));
+		this.http.post(url, {text: taskText})
+			.subscribe(res => {
+				console.log(res);
+				currentList.push(this._createNewTodoTask(taskText));
 
-		this.tasksList.next(currentList);
+				this.tasksList.next(currentList);
+			});
 	}
 
 	public isEmptyTasksList(): boolean {
@@ -105,7 +108,8 @@ export class BoardService {
 	// Boards flow
 
 	public createBoard(data) {
-		return this.http.post(this.commonService.apiPrefixed('boards'), data).do(res => {});
+		return this.http.post(this.commonService.apiPrefixed('boards'), data).do(res => {
+		});
 	}
 
 	//
@@ -141,7 +145,7 @@ export class BoardService {
 		return new Todo(params);
 	}
 
-	private _getBoardDataById(id: number, boards: Board[]): Board {
+	private _getBoardDataById(id: string, boards: Board[]): Board {
 		const filtered = boards.filter(board => board.id === id);
 		const currentBoard = filtered[0];
 

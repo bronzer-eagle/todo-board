@@ -10,8 +10,8 @@ export class Todo {
 	static transformer(source): Todo {
 		const data = {
 			id: source.id,
-			text: source.task_text,
-			isCompleted: source.is_completed
+			text: source.text,
+			isCompleted: source.isCompleted
 		};
 
 		return new Todo(data);

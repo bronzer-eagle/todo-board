@@ -5,19 +5,20 @@ const Validator = require('../validator');
 
 const Schema = mongoose.Schema;
 
-const boardSchema = new Schema({
-	boardName: {
+const taskSchema = new Schema({
+	text: {
 		type: String,
 		required: true
 	},
-	tasks: {
-		type: [{type: Schema.Types.ObjectId, ref: 'Task'}],
-		default: []
+	isCompleted: {
+		type: Boolean,
+		default: false
 	}
 });
 
-class BoardModel {}
+class taskModel {
+}
 
-boardSchema.loadClass(BoardModel);
+taskSchema.loadClass(taskModel);
 
-module.exports = boardSchema;
+module.exports = taskSchema;

@@ -3,7 +3,6 @@ import {BoardService} from '../../services/board.service';
 import {Board} from '../../models/board/board';
 import {
 	trigger,
-	state,
 	style,
 	animate,
 	transition
@@ -39,7 +38,7 @@ export class BoardsListComponent implements OnInit {
 	}
 
 	private _subscribeToBoardsList(): void {
-		this.boardService.boards
+		this.boardService.getBoardsList()
 			.subscribe(boardList => {
 				this.boards = boardList;
 			});

@@ -52,18 +52,20 @@ class Application {
 		});
 
 		this.app.use(jwt({ secret: process.env.JWTSecret}).unless({path: [/\/api\/auth\/\w*/]}));
-		this.app.use(bodyParser.urlencoded({extended: false}));
+		this.app.use(bodyParser.urlencoded({extended: true}));
 		this.app.use(bodyParser.json());
 	}
 
 	_setRoutes() {
 		const [
 			authRoutes,
-			boardsRoutes
+			boardsRoutes,
+			tasksRoutes
 		] = require('./app/routes/index');
 
 		this.app.use('/api/auth', authRoutes);
 		this.app.use('/api/boards', boardsRoutes);
+		this.app.use('/api/boards/:boardId/tasks', tasksRoutes);
 
 		this.app.get('/', (req, res) => {
 			res.send('Server is working')

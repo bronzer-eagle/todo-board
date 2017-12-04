@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {WebsocketService} from './services/websocket.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {CommonService} from './services/common.service';
+import {Router} from '@angular/router';
 import {AuthService} from './modules/auth/services/auth.service';
 
 @Component({
@@ -37,7 +36,7 @@ export class AppComponent implements OnInit {
 	connectWebsocket() {
 		this.websoketService.connect()
 			.subscribe((result = {}) => {
-				console.log(`Root component connected! Status: ${result['status']}`);
+				console.log(`Websocket server connected! Status: ${result['status']}`);
 			}, err => {
 				console.log('Some error occured:', err['message']);
 				console.log(err['error']);

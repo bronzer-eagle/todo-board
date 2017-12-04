@@ -1,7 +1,7 @@
 import {Todo} from '../todo/todo';
 
 export class Board {
-	public id: number;
+	public id: string;
 	public name: string;
 	public tasks: Todo[];
 

@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {CanActivateChild, Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class GuardService implements CanActivateChild {

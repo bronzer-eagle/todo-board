@@ -59,7 +59,7 @@ export class BoardComponent implements OnInit {
 			return;
 		}
 
-		this.boardService.addNewTask(this.newTaskText);
+		this.boardService.addNewTask(this.newTaskText, this.board.id);
 
 		this.newTaskText = '';
 	}

@@ -22,12 +22,12 @@ class BoardsController {
 		console.log('get');
 		const Board = this.db.getModel('Board');
 
-		Board.find({}).then(boards => {
+		Board.find({}).populate('tasks').then(boards => {
 			let transformed = boards.map(board => {
 				return {
 					id: board._id,
 					boardName: board.boardName,
-					tasks: []
+					tasks: board.tasks
 				}
 			});
 			this.socket.emit('setTodos', transformed);
