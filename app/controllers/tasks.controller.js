@@ -1,9 +1,10 @@
 const DB = require('../db');
-
+const BoardsController = require('./boards.controller');
 
 class TasksController {
 	constructor() {
 		this.db = new DB();
+		this.boardCtrl = new BoardsController();
 	}
 
 	addTask(req, res) {
@@ -29,6 +30,8 @@ class TasksController {
 					id: task.id
 				}
 			});
+
+			this.boardCtrl.sendBoardList();
 		});
 	}
 }

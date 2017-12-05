@@ -33,9 +33,7 @@ export class BoardComponent implements OnInit {
 	private _setCurrentBoard(): void {
 		this.router.params
 			.map(data => data.id)
-			.switchMap(id => {
-				return this.boardService.returnBoardData(id);
-			})
+			.switchMap(id => this.boardService.returnBoardData(id))
 			.subscribe((board: Board) => {
 				if (board) {
 					this.board = Object.assign({}, board);

@@ -33,12 +33,13 @@ export class BoardsListComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this._subscribeToBoardsList();
 		this._createForm();
+		this._subscribeToBoardsList();
+		this.boardService.getBoardsList();
 	}
 
 	private _subscribeToBoardsList(): void {
-		this.boardService.getBoardsList()
+		this.boardService.boards
 			.subscribe(boardList => {
 				this.boards = boardList;
 			});

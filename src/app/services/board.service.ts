@@ -4,6 +4,8 @@ import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import findIndex from 'lodash/fp/findIndex';
+import _find from 'lodash/find';
+import _equal from 'lodash/isequal';
 
 import 'rxjs/add/observable/from';
 import 'rxjs/add/operator/map';
@@ -13,15 +15,18 @@ import {Todo} from '../models/todo/todo';
 import {Board} from '../models/board/board';
 import {WebsocketService} from './websocket.service';
 import {CommonService} from './common.service';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class BoardService {
 	tasksList: BehaviorSubject<Todo[]> = new BehaviorSubject<Todo[]>([]);
 	boards: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
+	currentBoardId: any;
 
 	constructor(private http: HttpClient,
 				private socket: WebsocketService,
-				private commonService: CommonService) {
+				private commonService: CommonService,
+				private router: Router) {
 	}
 
 	// Endpoints
@@ -31,15 +36,13 @@ export class BoardService {
 	 * @returns {Observable<any>}
 	 */
 
-	public getBoardsList(): Observable<any> {
-		const listener = this.socket.on('setTodos')
-			.map((res: [object]) => res.map(Board.transformer));
-
-		listener.subscribe(this.boards);
+	public getBoardsList(): void {
+		this.socket
+			.on('setTodos')
+			.map((res: [object]) => res.map(Board.transformer))
+			.subscribe(this.boards);
 
 		this.socket.emit('getTodos');
-
-		return listener;
 	}
 
 	/**
@@ -52,15 +55,21 @@ export class BoardService {
 		const boardsList = this.boards.getValue();
 		const listExists = boardsList && boardsList.length;
 
+		this.currentBoardId = id;
+
+		this._listenForBoardsChange();
+
 		if (listExists) {
 			return Observable.create(observer => {
 				const board = this._getBoardDataById(id, boardsList);
 
 				observer.next(board);
 			});
-		}
+		} else {
+			this.getBoardsList();
 
-		return this.getBoardsList().map(boards => this._getBoardDataById(id, boards));
+			return this.boards.map(boards => this._getBoardDataById(id, boards));
+		}
 	}
 
 	// Actions
@@ -108,7 +117,11 @@ export class BoardService {
 	// Boards flow
 
 	public createBoard(data) {
-		return this.http.post(this.commonService.apiPrefixed('boards'), data).do(res => {});
+		return this.http
+			.post(this.commonService.apiPrefixed('boards'), data)
+			.do(() => {
+				this.router.navigateByUrl('app/boards-list');
+			});
 	}
 
 	//
@@ -131,5 +144,19 @@ export class BoardService {
 		}
 
 		return currentBoard;
+	}
+
+	private _listenForBoardsChange() {
+		this.boards.subscribe((boards: Board[]) => {
+
+			if (this.currentBoardId && boards.length) {
+				const board: Board = _find(boards, {id: this.currentBoardId}) || {};
+				const isEqual = _equal(this.tasksList, board.tasks);
+
+				if (!isEqual) {
+					this.tasksList.next(board.tasks);
+				}
+			}
+		});
 	}
 }
