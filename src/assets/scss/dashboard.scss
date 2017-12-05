@@ -1,0 +1,40 @@
+.dashboard {
+	padding: 20px;
+	margin: 5% auto;
+
+	width: 90%;
+	max-width: 720px;
+
+	background: #f3f3f3;
+
+	.dashboard-item {
+		$bg: #c5ddf3;
+
+		padding: 20px;
+		margin: 0 auto 15px;
+
+		background: $bg;
+
+		animation: flyTop 0.5s ease-in;
+		transition: background 0.2s linear;
+
+		position: relative;
+
+		&:hover,
+		&:active {
+			background: darken($bg, 5%);
+		}
+	}
+
+	.dashboard-item:last-child {
+		margin: 0 auto;
+	}
+
+	.dashboard-item-text {
+		text-decoration: none;
+		color: #000000;
+		text-transform: capitalize;
+		letter-spacing: 1px;
+		vertical-align: middle;
+	}
+}

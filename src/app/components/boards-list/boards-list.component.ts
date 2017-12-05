@@ -68,6 +68,14 @@ export class BoardsListComponent implements OnInit {
 			.finally(() => this.processing = false)
 			.subscribe(res => {
 				console.log(res);
+				this.disableBoardCreationMode();
+			});
+	}
+
+	public removeBoard(id) {
+		this.boardService.removeBoard(id)
+			.subscribe(res => {
+				console.log(res);
 			});
 	}
 }

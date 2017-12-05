@@ -1,19 +1,26 @@
-<div>
+<div class="todo">
 
 	<input type="checkbox"
 		   id="{{ 'todoToggler-' + todoData['id'] }}"
 		   name="{{ 'todoToggler-' + todoData['id'] }}"
-		   (change)="changeTodoStatus()"
 		   [(ngModel)]="isCompleted"
 		   title="Complete task"
+		   class="hidden-checkbox"
 	>
 
-	<span class="todo-text">
+	<button class="fa visible-checkbox"
+			[ngClass]="{
+				'fa-circle-o': !isCompleted,
+				'fa-check-circle': isCompleted
+			}"
+			title="Complete task"
+			(click)="changeTodoStatus()"
+	></button>
+
+	<span class="todo-text dashboard-item-text">
 		{{ todoData['text'] }}
 	</span>
 
-	<button (click)="removeTodo()">
-		Remove
-	</button>
+	<button (click)="removeTodo()" class="fa fa-times remove-btn"></button>
 
 </div>

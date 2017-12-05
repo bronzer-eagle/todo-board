@@ -11,7 +11,7 @@ import {Todo} from '../../models/todo/todo';
 @Component({
 	selector: 'app-board',
 	templateUrl: './board.component.html',
-	styleUrls: ['./board.component.css'],
+	styleUrls: ['./board.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
 export class BoardComponent implements OnInit {

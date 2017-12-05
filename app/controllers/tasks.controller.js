@@ -13,15 +13,17 @@ class TasksController {
 		const Task = this.db.getModel('Task');
 		const Board = this.db.getModel('Board');
 
+		let task, board;
+
 		Promise.all([
 			Task.create({text}),
 			Board.findById(boardId)
 		]).then(result => {
-			const [task, board] = result;
-
+			[task, board] = result;
 			board.tasks.push(task._id);
-			board.save();
-
+			
+			return board.save();
+		}).then(() => {
 			res.apiResponse(200, {
 				message: 'Successfully added new task to the board.',
 				task: {
@@ -32,7 +34,7 @@ class TasksController {
 			});
 
 			this.boardCtrl.sendBoardList();
-		});
+		})
 	}
 }
 

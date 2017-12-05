@@ -16,12 +16,14 @@ import {Board} from '../models/board/board';
 import {WebsocketService} from './websocket.service';
 import {CommonService} from './common.service';
 import {Router} from '@angular/router';
+import {Subscription} from 'rxjs/Subscription';
 
 @Injectable()
 export class BoardService {
 	tasksList: BehaviorSubject<Todo[]> = new BehaviorSubject<Todo[]>([]);
 	boards: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
 	currentBoardId: any;
+	socketSubscription: Subscription;
 
 	constructor(private http: HttpClient,
 				private socket: WebsocketService,
@@ -37,12 +39,14 @@ export class BoardService {
 	 */
 
 	public getBoardsList(): void {
-		this.socket
-			.on('setTodos')
-			.map((res: [object]) => res.map(Board.transformer))
-			.subscribe(this.boards);
+		if (!this.socketSubscription) {
+			this.socketSubscription = this.socket
+				.on('setTodos')
+				.map((res: [object]) => res.map(Board.transformer))
+				.subscribe(this.boards);
 
-		this.socket.emit('getTodos');
+			this.socket.emit('getTodos');
+		}
 	}
 
 	/**
@@ -118,19 +122,23 @@ export class BoardService {
 
 	public createBoard(data) {
 		return this.http
-			.post(this.commonService.apiPrefixed('boards'), data)
-			.do(() => {
-				this.router.navigateByUrl('app/boards-list');
-			});
+			.post(this.commonService.apiPrefixed('boards'), data);
+	}
+
+	public removeBoard(id) {
+		return this.http.delete(this.commonService.apiPrefixed(`boards/${id}`));
 	}
 
 	//
 
 	public calculateCompletedTasks(): number {
 		const currentList = this.tasksList.getValue();
-		const completedList = currentList.filter(task => task.isCompleted);
 
-		return completedList.length;
+		if (currentList) {
+			const completedList = currentList.filter(task => task.isCompleted);
+
+			return completedList.length;
+		}
 	}
 
 	// Private helpers
@@ -148,7 +156,6 @@ export class BoardService {
 
 	private _listenForBoardsChange() {
 		this.boards.subscribe((boards: Board[]) => {
-
 			if (this.currentBoardId && boards.length) {
 				const board: Board = _find(boards, {id: this.currentBoardId}) || {};
 				const isEqual = _equal(this.tasksList, board.tasks);

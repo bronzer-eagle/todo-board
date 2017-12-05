@@ -1,5 +1,6 @@
 const Socket = require('../websockets');
 const DB = require('../db');
+const Helper = require('../helper');
 
 class BoardsController {
 	constructor() {
@@ -18,11 +19,25 @@ class BoardsController {
 		}).catch(error => res.apiResponse(400, {message: 'Failed', error}));
 	}
 
+	remove(req, res) {
+		const id = req.params.id;
+		const Board = this.db.getModel('Board');
+
+		Board.remove({_id: id})
+			.then(() => {
+				res.apiResponse(200, {message: 'Board removed'});
+				this.sendBoardList();
+			})
+			.catch(error => res.apiResponse(400, {message: 'Failed', error}));
+	}
+
 	sendBoardList() {
 		console.log('get');
 		const Board = this.db.getModel('Board');
 
 		Board.find({}).populate('tasks').then(boards => {
+			Helper.logger(boards);
+
 			let transformed = boards.map(board => {
 				return {
 					id: board._id,

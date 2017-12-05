@@ -1,14 +1,16 @@
-<section class="board-list" *ngIf="!boardCreationMode">
+<section class="board-list dashboard" *ngIf="!boardCreationMode">
 
 	<button class="app-button create-board-btn" (click)="enableBoardCreationMode()">
 		Add board
 	</button>
 
-	<div *ngFor="let board of boards" class="board-item">
+	<div *ngFor="let board of boards" class="board-item dashboard-item">
 		<a [routerLink]="['/app/board/', board.id]"
-		   [@flyInOut]="''" class="boar-item-link"></a>
+		   [@flyInOut]="''" class="board-item-link"></a>
 
-		<span class="boar-item-text">{{ board.name }}</span>
+		<span class="boar-item-text dashboard-item-text">{{ board.name }}</span>
+
+		<button class="fa fa-times remove-btn" (click)="removeBoard(board.id)"></button>
 
 	</div>
 
