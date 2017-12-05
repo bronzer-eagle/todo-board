@@ -16,7 +16,12 @@ const boardSchema = new Schema({
 	}
 });
 
-class BoardModel {}
+boardSchema.pre('remove', function (next) {
+	this.model('Task').remove({_id: {$in: this.tasks}}, next);
+});
+
+class BoardModel {
+}
 
 boardSchema.loadClass(BoardModel);
 

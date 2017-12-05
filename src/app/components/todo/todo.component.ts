@@ -30,7 +30,7 @@ export class TodoComponent implements OnInit {
 	public changeTodoStatus(): void {
 		this.onCheck.emit({
 			id: this.todoData['id'],
-			isCompleted: this.isCompleted
+			isCompleted: !this.isCompleted
 		});
 	}
 }

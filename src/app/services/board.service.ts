@@ -27,8 +27,7 @@ export class BoardService {
 
 	constructor(private http: HttpClient,
 				private socket: WebsocketService,
-				private commonService: CommonService,
-				private router: Router) {
+				private commonService: CommonService) {
 	}
 
 	// Endpoints
@@ -79,15 +78,11 @@ export class BoardService {
 	// Actions
 
 	public addNewTask(taskText: string, id: string): void {
-		const currentList = this.tasksList.getValue();
 		const url = this.commonService.apiPrefixed(`boards/${id}/tasks`);
 
 		this.http.post(url, {text: taskText})
 			.subscribe(res => {
 				console.log(res);
-				currentList.push(new Todo(res['task']));
-
-				this.tasksList.next(currentList);
 			});
 	}
 
@@ -95,18 +90,11 @@ export class BoardService {
 		return this.tasksList.getValue().length === 0;
 	}
 
-	public changeTaskStatus(id, isCompleted): void {
-		const currentList = this.tasksList.getValue();
-		const newList = currentList.map(task => {
+	public changeTaskStatus(id, isCompleted, boardId): void {
+		const url = this.commonService.apiPrefixed(`boards/${boardId}/tasks/${id}`);
 
-			if (task['id'] === id) {
-				task.isCompleted = isCompleted;
-			}
-
-			return task;
-		});
-
-		this.tasksList.next(newList);
+		this.http.put(url, {isCompleted})
+			.subscribe(() => {});
 	}
 
 	public removeTask(id): void {
@@ -158,11 +146,23 @@ export class BoardService {
 		this.boards.subscribe((boards: Board[]) => {
 			if (this.currentBoardId && boards.length) {
 				const board: Board = _find(boards, {id: this.currentBoardId}) || {};
-				const isEqual = _equal(this.tasksList, board.tasks);
+				const isEqual = _equal(this.tasksList.getValue(), board.tasks);
 
 				if (!isEqual) {
 					this.tasksList.next(board.tasks);
 				}
+			}
+		});
+	}
+
+	public updateCollection(prev = [], next = []) {
+		next.forEach((item, index) => {
+			let prevItem = prev[index];
+
+			if (prevItem && prevItem.id === item.id) {
+				Object.assign(prevItem, item);
+			} else {
+				prev.splice(index, 1, item);
 			}
 		});
 	}

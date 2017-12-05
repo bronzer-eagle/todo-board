@@ -21,20 +21,34 @@ class TasksController {
 		]).then(result => {
 			[task, board] = result;
 			board.tasks.push(task._id);
-			
+
 			return board.save();
 		}).then(() => {
 			res.apiResponse(200, {
-				message: 'Successfully added new task to the board.',
-				task: {
-					text: task.text,
-					isCompleted: task.isCompleted,
-					id: task.id
-				}
+				message: 'Successfully added new task to the board.'
 			});
 
 			this.boardCtrl.sendBoardList();
 		})
+	}
+
+	changeStatus(req, res) {
+		const Task = this.db.getModel('Task');
+		const id = req.params.id;
+		const isCompleted = req.body.isCompleted;
+
+		Task.findById(id)
+			.then(task => {
+				task.isCompleted = isCompleted;
+				return task.save();
+			})
+			.then(() => {
+				res.apiResponse(200, {
+					message: 'Successfully changed task status.',
+				});
+
+				this.boardCtrl.sendBoardList();
+			})
 	}
 }
 

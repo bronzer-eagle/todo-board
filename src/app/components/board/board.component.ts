@@ -36,6 +36,8 @@ export class BoardComponent implements OnInit {
 			.switchMap(id => this.boardService.returnBoardData(id))
 			.subscribe((board: Board) => {
 				if (board) {
+					// TODO: change board subscription
+
 					this.board = Object.assign({}, board);
 					this._listenForTasksListChange();
 				}
@@ -44,7 +46,7 @@ export class BoardComponent implements OnInit {
 
 	public changeStatus({id, isCompleted}) {
 		console.log(`Changing status of ${id} task to: ${isCompleted ? 'completed' : 'not completed'}`);
-		this.boardService.changeTaskStatus(id, isCompleted);
+		this.boardService.changeTaskStatus(id, isCompleted, this.board.id);
 	}
 
 	public removeTask(id) {
@@ -68,7 +70,8 @@ export class BoardComponent implements OnInit {
 		this.boardService.tasksList
 			.subscribe((tasks: Todo[]) => {
 				if (this.board) {
-					this.board.tasks = tasks;
+					this.boardService.updateCollection(this.board.tasks, tasks);
+
 					this.completedTasksAmount = this.boardService.calculateCompletedTasks();
 				}
 			});
