@@ -1,6 +1,6 @@
 const socket = require('socket.io');
-const jf = require('jsonfile');
 const jwtAuth = require('socketio-jwt-auth');
+const Helper = require('./helper');
 
 const DB = require('./db');
 
@@ -19,8 +19,10 @@ class SocketClient {
 
 		this.client.on('getTodos', boardCtrl.sendBoardList.bind(boardCtrl));
 		this.client.on('disconnect', () => {
-			console.log('Received: disconnect event from client: ' + this.client.id);
+			Helper.logger('Received: disconnect event from client: ' + this.client.id);
 		});
+
+		boardCtrl.sendBoardList();
 	}
 }
 
@@ -68,7 +70,8 @@ class SocketServer {
 
 	_connectionHandler() {
 		this.socket.on('connection', (client) => {
-			new SocketClient(client)
+			Helper.logger(`Client ${client.id} is connected.`);
+			new SocketClient(client);
 		});
 	}
 

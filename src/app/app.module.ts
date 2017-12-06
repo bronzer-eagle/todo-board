@@ -31,6 +31,7 @@ import {routes} from './routes/routes';
 import {DataService} from './modules/shared/services/data.service';
 import {CommonService} from './services/common.service';
 import {AuthInterceptor} from './services/auth.interceptor';
+import {AuthService} from './services/auth.service';
 
 
 
@@ -55,7 +56,7 @@ import {AuthInterceptor} from './services/auth.interceptor';
 		provide: HTTP_INTERCEPTORS,
 		useClass: AuthInterceptor,
 		multi: true,
-	}],
+	}, AuthService],
 	bootstrap: [AppComponent]
 })
 export class AppModule {

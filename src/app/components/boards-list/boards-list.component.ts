@@ -1,12 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {BoardService} from '../../services/board.service';
 import {Board} from '../../models/board/board';
-import {
-	trigger,
-	style,
-	animate,
-	transition
-} from '@angular/animations';
+import {trigger, style, animate, transition} from '@angular/animations';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
@@ -35,12 +30,11 @@ export class BoardsListComponent implements OnInit {
 	ngOnInit() {
 		this._createForm();
 		this._subscribeToBoardsList();
-		this.boardService.getBoardsList();
 	}
 
 	private _subscribeToBoardsList(): void {
 		this.boardService.boards
-			.subscribe(boardList => {
+			.subscribe((boardList: Board[]) => {
 				this.boards = boardList;
 			});
 	}
@@ -51,6 +45,8 @@ export class BoardsListComponent implements OnInit {
 		});
 	}
 
+	// Actions
+
 	public enableBoardCreationMode() {
 		this.boardCreationMode = true;
 	}
@@ -58,6 +54,8 @@ export class BoardsListComponent implements OnInit {
 	public disableBoardCreationMode() {
 		this.boardCreationMode = false;
 	}
+
+	// Board CRUD flow
 
 	public addNewBoard() {
 		const data = this.boardCreator.value;

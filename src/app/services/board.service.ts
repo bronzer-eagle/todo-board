@@ -15,37 +15,25 @@ import {Todo} from '../models/todo/todo';
 import {Board} from '../models/board/board';
 import {WebsocketService} from './websocket.service';
 import {CommonService} from './common.service';
-import {Router} from '@angular/router';
-import {Subscription} from 'rxjs/Subscription';
 
 @Injectable()
 export class BoardService {
 	tasksList: BehaviorSubject<Todo[]> = new BehaviorSubject<Todo[]>([]);
 	boards: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
 	currentBoardId: any;
-	socketSubscription: Subscription;
 
 	constructor(private http: HttpClient,
 				private socket: WebsocketService,
 				private commonService: CommonService) {
+		this.listenForBoardListChange();
 	}
 
 	// Endpoints
 
-	/**
-	 * Get all boards from JSON
-	 * @returns {Observable<any>}
-	 */
-
-	public getBoardsList(): void {
-		if (!this.socketSubscription) {
-			this.socketSubscription = this.socket
-				.on('setTodos')
-				.map((res: [object]) => res.map(Board.transformer))
-				.subscribe(this.boards);
-
-			this.socket.emit('getTodos');
-		}
+	public listenForBoardListChange(): void {
+		this.socket.on('setTodos')
+			.map((res: [object]) => res.map(Board.transformer))
+			.subscribe(this.boards);
 	}
 
 	/**
@@ -69,7 +57,7 @@ export class BoardService {
 				observer.next(board);
 			});
 		} else {
-			this.getBoardsList();
+			this.listenForBoardListChange();
 
 			return this.boards.map(boards => this._getBoardDataById(id, boards));
 		}
@@ -94,7 +82,8 @@ export class BoardService {
 		const url = this.commonService.apiPrefixed(`boards/${boardId}/tasks/${id}`);
 
 		this.http.put(url, {isCompleted})
-			.subscribe(() => {});
+			.subscribe(() => {
+			});
 	}
 
 	public removeTask(id): void {

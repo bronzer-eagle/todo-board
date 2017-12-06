@@ -1,15 +1,14 @@
 import {Injectable} from '@angular/core';
-import {WebsocketService} from '../../../services/websocket.service';
-import {User} from '../models/user';
+import {User} from '../modules/auth/models/user';
 import {HttpClient} from '@angular/common/http';
 
 import 'rxjs/add/operator/do';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {CommonService} from '../../../services/common.service';
+import {CommonService} from './common.service';
 
 @Injectable()
 export class AuthService {
-	public isLogged: BehaviorSubject<boolean> = new BehaviorSubject(null);
+	public isLogged: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
 	constructor(private commonService: CommonService,
 				private http: HttpClient) {
@@ -40,9 +39,4 @@ export class AuthService {
 			}
 		});
 	}
-
-	setLogged() {
-		window.localStorage.setItem('isLogged', 'true');
-	}
-
 }

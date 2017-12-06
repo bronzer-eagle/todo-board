@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {WebsocketService} from './services/websocket.service';
 import {Router} from '@angular/router';
-import {AuthService} from './modules/auth/services/auth.service';
+import {AuthService} from './services/auth.service';
 
 @Component({
 	selector: 'app-root',
@@ -18,12 +18,11 @@ export class AppComponent implements OnInit {
 
 	ngOnInit() {
 		this.listenForLogin();
-
 		this.isAuthRoutes();
 	}
 
 	listenForLogin() {
-		this.authService.isLogged.subscribe(flag => {
+		this.authService.isLogged.subscribe((flag: boolean) => {
 
 			this.isLogged = flag;
 
