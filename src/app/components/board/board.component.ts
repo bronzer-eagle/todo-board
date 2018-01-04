@@ -16,19 +16,19 @@ import {Todo} from '../../models/todo/todo';
 })
 export class BoardComponent implements OnInit {
 	board: Board;
+	tasks: Todo[];
 	newTaskText: string;
 	completedTasksAmount: number;
 
 	constructor(private boardService: BoardService,
 				private router: ActivatedRoute) {
 		this.completedTasksAmount = 0;
+		this.tasks = [];
 	}
 
 	ngOnInit() {
 		this._setCurrentBoard();
 	}
-
-	// Actions
 
 	private _setCurrentBoard(): void {
 		this.router.params
@@ -36,13 +36,22 @@ export class BoardComponent implements OnInit {
 			.switchMap(id => this.boardService.returnBoardData(id))
 			.subscribe((board: Board) => {
 				if (board) {
-					// TODO: change board subscription
-
 					this.board = Object.assign({}, board);
 					this._listenForTasksListChange();
 				}
 			});
 	}
+
+	private _listenForTasksListChange() {
+		this.boardService.tasksList
+			.subscribe((tasks: Todo[]) => {
+				console.log(tasks);
+				this.boardService.updateCollection(this.tasks, tasks);
+				this.completedTasksAmount = this.boardService.calculateCompletedTasks();
+			});
+	}
+
+	// Actions
 
 	public changeStatus({id, isCompleted}) {
 		console.log(`Changing status of ${id} task to: ${isCompleted ? 'completed' : 'not completed'}`);
@@ -55,25 +64,10 @@ export class BoardComponent implements OnInit {
 	}
 
 	public createNewTodo() {
-		if (!this.newTaskText) {
-			return;
+		if (this.newTaskText) {
+			this.boardService.addNewTask(this.newTaskText, this.board.id);
+
+			this.newTaskText = '';
 		}
-
-		this.boardService.addNewTask(this.newTaskText, this.board.id);
-
-		this.newTaskText = '';
-	}
-
-	// Private helpers
-
-	private _listenForTasksListChange() {
-		this.boardService.tasksList
-			.subscribe((tasks: Todo[]) => {
-				if (this.board) {
-					this.boardService.updateCollection(this.board.tasks, tasks);
-
-					this.completedTasksAmount = this.boardService.calculateCompletedTasks();
-				}
-			});
 	}
 }

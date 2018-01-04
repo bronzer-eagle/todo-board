@@ -1,16 +1,16 @@
 <a routerLink="/app/boards-list">Back to boards list</a>
 
 <article *ngIf="board" class="dashboard board">
-	<p *ngIf="board.tasks.length">
-		Tasks completed: {{ completedTasksAmount }} of {{ board.tasks.length }}
+	<p *ngIf="tasks.length">
+		Tasks completed: {{ completedTasksAmount }} of {{ tasks.length }}
 	</p>
 
-	<p *ngIf="!board.tasks.length">
+	<p *ngIf="!tasks.length">
 		No tasks in the board.
 	</p>
 
 	<ul class="board-tasks-container">
-		<li *ngFor="let task of board.tasks" class="dashboard-item">
+		<li *ngFor="let task of tasks" class="dashboard-item">
 			<app-todo [todoData]="task"
 					  (onCheck)="changeStatus($event)"
 					  (onRemove)="removeTask($event)">

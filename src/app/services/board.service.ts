@@ -33,22 +33,23 @@ export class BoardService {
 	public listenForBoardListChange(): void {
 		this.socket.on('setTodos')
 			.map((res: [object]) => res.map(Board.transformer))
-			.subscribe(this.boards);
+			.subscribe((boards: Board[]) => {
+				this.boards.next(boards);
+				this._setTasksList(boards);
+			});
 	}
 
 	/**
 	 * Returns board data by id
-	 * @param {number} id
+	 * @param {any} id
 	 * @returns {Observable<any>}
 	 */
 
-	public returnBoardData(id: string): Observable<any> {
+	public returnBoardData(id: any): Observable<any> {
 		const boardsList = this.boards.getValue();
 		const listExists = boardsList && boardsList.length;
 
 		this.currentBoardId = id;
-
-		this._listenForBoardsChange();
 
 		if (listExists) {
 			return Observable.create(observer => {
@@ -57,13 +58,11 @@ export class BoardService {
 				observer.next(board);
 			});
 		} else {
-			this.listenForBoardListChange();
-
 			return this.boards.map(boards => this._getBoardDataById(id, boards));
 		}
 	}
 
-	// Actions
+	// Tasks flow
 
 	public addNewTask(taskText: string, id: string): void {
 		const url = this.commonService.apiPrefixed(`boards/${id}/tasks`);
@@ -72,10 +71,6 @@ export class BoardService {
 			.subscribe(res => {
 				console.log(res);
 			});
-	}
-
-	public isEmptyTasksList(): boolean {
-		return this.tasksList.getValue().length === 0;
 	}
 
 	public changeTaskStatus(id, isCompleted, boardId): void {
@@ -106,7 +101,40 @@ export class BoardService {
 		return this.http.delete(this.commonService.apiPrefixed(`boards/${id}`));
 	}
 
-	//
+	// Private helpers
+
+	private _getBoardDataById(id: string, boards: Board[]): Board {
+		const filtered = boards.filter(board => board.id === id);
+
+		return filtered[0];
+	}
+
+	private _setTasksList(boards) {
+		if (this.currentBoardId && boards.length) {
+			const board: Board = _find(boards, {id: this.currentBoardId}) || {};
+			const isEqual = _equal(this.tasksList.getValue(), board.tasks);
+
+			if (!isEqual) {
+				this.tasksList.next(board.tasks);
+			}
+		}
+	}
+
+	// Public helpers
+
+	public updateCollection(prev = [], next = []) {
+		next.forEach((item, index) => {
+			let prevItem = prev[index];
+
+			if (prevItem && prevItem.id === item.id) {
+				console.log(prevItem);
+				console.log(item);
+				Object.assign(prevItem, item);
+			} else {
+				prev.splice(index, 1, item);
+			}
+		});
+	}
 
 	public calculateCompletedTasks(): number {
 		const currentList = this.tasksList.getValue();
@@ -118,41 +146,7 @@ export class BoardService {
 		}
 	}
 
-	// Private helpers
-
-	private _getBoardDataById(id: string, boards: Board[]): Board {
-		const filtered = boards.filter(board => board.id === id);
-		const currentBoard = filtered[0];
-
-		if (currentBoard) {
-			this.tasksList.next(currentBoard.tasks);
-		}
-
-		return currentBoard;
-	}
-
-	private _listenForBoardsChange() {
-		this.boards.subscribe((boards: Board[]) => {
-			if (this.currentBoardId && boards.length) {
-				const board: Board = _find(boards, {id: this.currentBoardId}) || {};
-				const isEqual = _equal(this.tasksList.getValue(), board.tasks);
-
-				if (!isEqual) {
-					this.tasksList.next(board.tasks);
-				}
-			}
-		});
-	}
-
-	public updateCollection(prev = [], next = []) {
-		next.forEach((item, index) => {
-			let prevItem = prev[index];
-
-			if (prevItem && prevItem.id === item.id) {
-				Object.assign(prevItem, item);
-			} else {
-				prev.splice(index, 1, item);
-			}
-		});
+	public isEmptyTasksList(): boolean {
+		return this.tasksList.getValue().length === 0;
 	}
 }
